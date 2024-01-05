@@ -13,14 +13,19 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # glfw
 find_package(glfw3 REQUIRED)
-message(STATUS "GLFW: ${glfw3_INCLUDE_DIR} ${GLFW_INCLUDE_DIR} ${GLFW_LIBRARIES} ${glfw3_LIBS}")
-
+# OPENGL_LIBRARIES
 find_package(OpenGL REQUIRED)
-message(STATUS "OpenGL: ${OPENGL_INCLUDE_DIR}, ${OPENGL_LIBRARIES}")
-
+# Threads::Threads
 find_package(Threads REQUIRED)
 
+# [4]
 add_executable(HelloWindow
     ${CMAKE_CURRENT_SOURCE_DIR}/glad.c
     ${CMAKE_CURRENT_SOURCE_DIR}/HelloWindow.cpp)
 target_link_libraries(HelloWindow Threads::Threads glfw ${OPENGL_LIBRARIES})
+
+# [5]
+add_executable(HelloTriangle
+    ${CMAKE_CURRENT_SOURCE_DIR}/glad.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/HelloTriangle.cpp)
+target_link_libraries(HelloTriangle Threads::Threads glfw ${OPENGL_LIBRARIES})
