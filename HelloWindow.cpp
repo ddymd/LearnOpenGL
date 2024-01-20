@@ -27,7 +27,9 @@ int main() {
     // we'll get access to a smaller subset of OpenGL features
     // without backwards-compatible features we no longer need
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+#ifdef MacOS
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif // MacOS
     // create a window object
     GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
     if (window == NULL) {
