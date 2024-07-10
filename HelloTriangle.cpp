@@ -23,8 +23,23 @@ void init_logger() {
     spdlog::set_pattern("[%^%L%$][%t][%H:%M:%S.%e][%s:%# %!()] %v");
 }
 
+// error callback
 void glfw_error_callback(int error, const char* description) {
     SPDLOG_ERROR("GLFW errorno({:d}): {}", error, description);
+}
+
+// resize callback
+void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
+    glViewport(0, 0, w, h);
+    SPDLOG_INFO("resize callback ==> {}x{}", w, h);
+}
+
+// Input
+void process_input(GLFWwindow* window) {
+    // SPDLOG_DEBUG("process input: {}", glfwGetKey(window, GLFW_KEY_F));
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
 
 int main(int args, char** argv) {
@@ -63,9 +78,16 @@ int main(int args, char** argv) {
         glfwTerminate();
         return -3;
     }
+    test();
+    // set view port
+    // glViewport(0, 0, 400, 300);
+
+    // set resize callback
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // Checking the window close flag
     while (!glfwWindowShouldClose(window)) {
+        process_input(window);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
