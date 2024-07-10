@@ -1,0 +1,6 @@
+[submodule "spdlog"]
+	path = 3rdparty/spdlog
+	url = https://github.com/ddymd/spdlog.git
+[submodule "glfw"]
+	path = 3rdparty/glfw
+	url = https://github.com/ddymd/glfw.git
