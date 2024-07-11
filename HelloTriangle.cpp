@@ -3,6 +3,7 @@
 #include <spdlog/cfg/env.h>
 #include <spdlog/logger.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/daily_file_sink.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -14,10 +15,33 @@ void test() {
     SPDLOG_INFO("info");
     SPDLOG_DEBUG("debug");
     SPDLOG_TRACE("trace");
+    SPDLOG_ERROR("测试中文: error");
+    SPDLOG_CRITICAL("测试中文: critical");
+    SPDLOG_WARN("测试中文: warn");
+    SPDLOG_INFO("测试中文: info");
+    SPDLOG_DEBUG("测试中文: debug");
+    SPDLOG_TRACE("测试中文: trace");
 }
 
 void init_logger() {
-    auto logger = std::make_shared<spdlog::logger>("console", std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+    auto handlers = std::make_shared<spdlog::file_event_handlers>();
+    // handlers->before_open = [](spdlog::filename_t filename) {
+    //     SPDLOG_INFO("Before opening {}", filename);
+    // };
+    handlers->after_open = [](spdlog::filename_t filename, std::FILE *fstream) {
+        fputs("===========================================================================================\n", fstream);
+        fputs("======================================TempMeasure==========================================\n", fstream);
+        fputs("===========================================================================================\n", fstream);
+    };
+    handlers->before_close = [](spdlog::filename_t filename, std::FILE *fstream) {
+        fputs("\n\n", fstream);
+    };
+    // handlers->after_close = [](spdlog::filename_t filename) {
+    //     SPDLOG_INFO("After closing {}", filename);
+    // };
+    auto filesink = std::make_shared<spdlog::sinks::daily_file_sink_mt>("logs/tempmeasure.txt", 0, 0, false, 0, *handlers);
+    auto consolesink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    auto logger = std::shared_ptr<spdlog::logger>(new spdlog::logger("default", { filesink, consolesink }));
     spdlog::set_default_logger(logger);
     spdlog::cfg::load_env_levels();
     spdlog::set_pattern("[%^%L%$][%t][%H:%M:%S.%e][%s:%# %!()] %v");
@@ -31,7 +55,7 @@ void glfw_error_callback(int error, const char* description) {
 // resize callback
 void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     glViewport(0, 0, w, h);
-    SPDLOG_INFO("resize callback ==> {}x{}", w, h);
+    // SPDLOG_INFO("resize callback ==> {}x{}", w, h);
 }
 
 // Input
@@ -84,11 +108,12 @@ int main(int args, char** argv) {
 
     // set resize callback
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+    glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
+    glClear(GL_COLOR_BUFFER_BIT);
     // Checking the window close flag
     while (!glfwWindowShouldClose(window)) {
         process_input(window);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        // glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);
