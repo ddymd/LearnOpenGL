@@ -1,0 +1,114 @@
+# https://alacritty.org/config-alacritty.html
+
+import = []
+# import = [
+# "~/.config/alacritty/base16-dark.toml",
+# "~/.config/alacritty/keybindings.toml",
+# ]
+
+# shell = "<string>" | { program = "<string>", args = ["<string>",] }
+# [shell]
+# program = "/bin/zsh"
+# args = ["-l"]
+
+working_directory = "C:/Users/Jack"
+
+# Live config reload (changes require restart)
+# live_config_reload = true
+
+# ipc_socket = true # (unix only)
+
+# All key-value pairs in the [env] section
+# will be added as environment variables for any process spawned by Alacritty,
+# including its shell. Some entries may override variables set by alacritty itself.
+[env]
+
+[window]
+dimensions = {columns = 0, lines = 0}
+position = "None"
+padding = {x = 0, y = 0}
+dynamic_padding = false
+# Window decorations
+# Full
+#   Borders and title bar.
+# None Neither
+#   borders nor title bar.
+# Transparent (macOS only)
+#   Title bar, transparent background and title bar buttons.
+# Buttonless (macOS only)
+#   Title bar, transparent background and no title bar buttons.
+decorations = "Full"
+# Background opacity as a floating point number from 0.0 to 1.0. The value 0.0 is
+# completely transparent and 1.0 is opaque.
+opacity = 1.0
+# Request compositor to blur content behind transparent windows.
+blur = false # (works on macOS/KDE Wayland)
+# Startup mode (changes require restart)
+# Windowed
+#   Regular window.
+# Maximized
+#   The window will be maximized on startup.
+# Fullscreen
+#   The window will be fullscreened on startup.
+# SimpleFullscreen (macOS only)
+#   Same as Fullscreen, but you can stack windows on top.
+startup_mode = "Windowed"
+title = "Alacritty"
+# Allow terminal applications to change Alacritty's window title
+dynamic_title = true
+# Window class.
+# On Wayland, general is used as app_id and instance is ignored.
+class = {instance = "Alacritty", general = "Alacritty"} # (Linux/BSD only)
+# Override the variant of the System theme/GTK theme/Wayland client side decorations.
+# Set this to "None" to use the system's default theme variant.
+# Dark Light None
+decorations_theme_variant  = "None"
+# Prefer resizing window by discrete steps equal to cell dimensions.
+resize_increments = false
+# Make Option key behave as Alt.
+# option_as_alt = "OnlyLeft" | "OnlyRight" | "Both" | "None" # (macos only)
+option_as_alt  = "None" # macos only
+
+[scrolling]
+# Maximum number of lines in the scrollback buffer.
+# Specifying 0 will disable scrolling.
+# Limited to 100000.
+history = 10000
+# Number of line scrolled for every input scroll increment.
+multiplier = 3
+
+[font]
+# Linux/BSD: { family = "monospace", style = "Regular" }
+# Windows: { family = "Consolas", style = "Regular" }
+# macOS: { family = "Menlo", style = "Regular" }
+normal = { family = "Consolas", style = "Regular" }
+
+# If the family is not specified, it will fall back to the value specified for the normal font.
+# Default: { style = "Bold" }
+# bold = { family = "<string>", style = "<string>" }
+
+# If the family is not specified, it will fall back to the value specified for the normal font.
+# Default: { style = "Italic" }
+# italic = { family = "<string>", style = "<string>" }
+
+# If the family is not specified, it will fall back to the value specified for the normal font.
+# Default: { style = "Bold Italic" }
+# bold_italic = { family = "<string>", style = "<string>" }
+
+# Font size in points.
+size = 11.25
+
+# Offset is the extra space around each character. y can be thought of as modifying the
+# line spacing, and x as modifying the letter spacing.
+offset = { x = 0, y = 0 }
+
+# Glyph offset determines the locations of the glyphs within their cells with the default
+# being at the bottom. Increasing x moves the glyph to the right, increasing y moves the
+# glyph upward.
+#glyph_offset = { x = <integer>, y = <integer> }
+
+# When true, Alacritty will use a custom built-in font for box drawing characters (Unicode
+# points U+2500 - U+259F) and powerline symbols (Unicode points U+E0B0 - U+E0B3).
+builtin_box_drawing = true
+
+[colors]
