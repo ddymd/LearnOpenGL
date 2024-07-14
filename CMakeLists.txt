@@ -14,7 +14,6 @@ if(APPLE)
     add_definitions(-DMacOS)
 endif()
 
-
 # OPENGL_LIBRARIES
 find_package(OpenGL REQUIRED)
 message(STATUS "OPENGL_LIBRARIES:${OPENGL_LIBRARIES}")
@@ -33,10 +32,4 @@ set(3RD_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.c
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.h)
 
-# [4]
-# add_executable(HelloWindow ${CMAKE_CURRENT_SOURCE_DIR}/HelloWindow.cpp ${3RD_SRC})
-# target_link_libraries(HelloWindow Threads::Threads glfw ${OPENGL_LIBRARIES} spdlog::spdlog)
-
-# [5]
-add_executable(HelloTriangle ${CMAKE_CURRENT_SOURCE_DIR}/HelloTriangle.cpp ${3RD_SRC})
-target_link_libraries(HelloTriangle Threads::Threads glfw ${OPENGL_LIBRARIES} spdlog::spdlog)
+add_subdirectory(HelloTriangle)
