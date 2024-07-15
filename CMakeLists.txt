@@ -33,4 +33,11 @@ set(3RD_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.c
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.h)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Shaders)
+set(SHADER_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.h
+)
+
 add_subdirectory(HelloTriangle)
+add_subdirectory(Shaders)

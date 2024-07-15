@@ -206,7 +206,7 @@ int main(int argc, char** argv) {
     glEnableVertexAttribArray(0);
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+    int vertexColorLocation = glGetUniformLocation(shaderProgram1, "ourColor");
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
@@ -215,8 +215,9 @@ int main(int argc, char** argv) {
         float timeValue = glfwGetTime();
         float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
         // SPDLOG_INFO("green value: {} {:f}", timeValue, greenValue);
-        int vertexColorLocation = glGetUniformLocation(shaderProgram1, "ourColor");
+        // int vertexColorLocation = glGetUniformLocation(shaderProgram1, "ourColor");
         glUseProgram(shaderProgram1);
+        // it sets the uniform on the currently active shader program, so need to user program first
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, 3);
