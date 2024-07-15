@@ -9,20 +9,26 @@
 const char *vertexShaderSource =
 "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"out vec4 vertexColor;"
 "void main() {\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);"
 "}\0";
 const char *fragmentShaderSource1 =
 "#version 330 core\n"
 "out vec4 FragColor;\n"
+"uniform vec4 ourColor;\n"
 "void main() {\n"
-"   FragColor = vec4(1.f, 0.5f, 0.2f, 1.f);\n"
+"   // FragColor = vec4(1.f, 0.5f, 0.2f, 1.f);\n"
+"   FragColor = ourColor;\n"
 "}\0";
 const char *fragmentShaderSource2 =
 "#version 330 core\n"
+"in vec4 vertexColor;"
 "out vec4 FragColor;\n"
 "void main() {\n"
-"   FragColor = vec4(1.f, 1.f, 0.f, 1.f);\n"
+"   // FragColor = vec4(1.f, 1.f, 0.f, 1.f);\n"
+"   FragColor = vertexColor;\n"
 "}\0";
 
 float vertices1[] = {
@@ -91,6 +97,8 @@ int main(int argc, char** argv) {
     int nrAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     SPDLOG_INFO("Maximum nr of vertex attributes supported: {:d}", nrAttributes);
+
+    // glGetAttribLocation()
 
     // vertex shader
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -197,14 +205,19 @@ int main(int argc, char** argv) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        float timeValue = glfwGetTime();
+        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+        // SPDLOG_INFO("green value: {} {:f}", timeValue, greenValue);
+        int vertexColorLocation = glGetUniformLocation(shaderProgram1, "ourColor");
         glUseProgram(shaderProgram1);
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -225,4 +238,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
