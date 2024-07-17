@@ -1,10 +1,11 @@
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 #include "spdlog/spdlog.h"
+#include "shader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#define TEXTURE_IMAGE "brickwall.jpg"
+#define TEXTURE_IMAGE "container.jpg"
 
 float vertices[] = {
     // positions      // colors         // texture coords
@@ -14,6 +15,22 @@ float vertices[] = {
     -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
 };
 
+unsigned int indices[] = {
+    0, 1, 3, // first triangle
+    1, 2, 3  // second triangle
+};
+
+unsigned int VAO, texture;
+
+void draw(unsigned int VAO, unsigned int texture) {
+    glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindVertexArray(VAO);
+    // GLenum mode, GLsizei count, GLenum type, const void *indices
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
 void glfwErrorCallback(int ec, const char* emsg) {
     SPDLOG_ERROR("GLFW::ERROR::CALLBACK({}): {}", ec, emsg);
 }
@@ -21,8 +38,7 @@ void glfwErrorCallback(int ec, const char* emsg) {
 void glfwFramebufferSizeCallback(GLFWwindow* window, int w, int h) {
     // SPDLOG_INFO("resize to: {}x{}", w, h);
     glViewport(0, 0, w, h);
-    glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    draw(VAO, texture);
     glfwSwapBuffers(window);
 }
 
@@ -69,29 +85,57 @@ int main(int argc, char** argv) {
     int w, h, c;
     unsigned char* data = stbi_load(TEXTURE_IMAGE, &w, &h, &c, 0);
     // create texture
-    unsigned int texture;
+    // unsigned int texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     if (data) {
         // GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         // GLenum target
         glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
     } else {
         SPDLOG_ERROR("failed to load texture");
     }
-    stbi_image_free(data);
     // >>> shader program
+    Shader shaderProgram("texture.vs", "texture.fs");
+    shaderProgram.use();
     // >>> VAO
+    // unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
     // >>> VBO
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // >>> EBO
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // >>> vertex attributes
+    // GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
+    glEnableVertexAttribArray(2);
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
-        glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        draw(VAO, texture);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    glDeleteTextures(1, &texture);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
