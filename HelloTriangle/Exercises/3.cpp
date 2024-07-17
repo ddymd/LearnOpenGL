@@ -230,8 +230,8 @@ int main(int argc, char** argv) {
         glfwPollEvents();
     }
 
-    glDeleteShader(shaderProgram1);
-    glDeleteShader(shaderProgram2);
+    glDeleteProgram(shaderProgram1);
+    glDeleteProgram(shaderProgram2);
     glDeleteVertexArrays(2, VAO);
     glDeleteBuffers(2, VBO);
     glfwDestroyWindow(window);
