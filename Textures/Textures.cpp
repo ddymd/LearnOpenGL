@@ -6,7 +6,8 @@
 #include "stb_image.h"
 #include "config.h"
 
-#define TEXTURE_IMAGE RESOURCES_DIR"container.jpg"
+#define TEXTURE_IMAGE1 RESOURCES_DIR"container.jpg"
+#define TEXTURE_IMAGE2 RESOURCES_DIR"awesomeface.png"
 #define VERTEX_SHADER_SRC TOP_SRC_DIR"Textures/texture.vs"
 #define FRAGMENT_SHADER_SRC TOP_SRC_DIR"Textures/texture.fs"
 
@@ -23,12 +24,15 @@ unsigned int indices[] = {
     1, 2, 3  // second triangle
 };
 
-unsigned int VAO, texture;
+unsigned int VAO, texture[2];
 
-void draw(unsigned int VAO, unsigned int texture) {
+void draw(unsigned int VAO, unsigned int *texture) {
     glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
     glBindVertexArray(VAO);
     // GLenum mode, GLsizei count, GLenum type, const void *indices
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -86,12 +90,13 @@ int main(int argc, char** argv) {
     glfwSetFramebufferSizeCallback(window, glfwFramebufferSizeCallback);
     // >>> textures
     // load image
+    stbi_set_flip_vertically_on_load(true);
     int w, h, c;
-    unsigned char* data = stbi_load(TEXTURE_IMAGE, &w, &h, &c, 0);
+    unsigned char* data = stbi_load(TEXTURE_IMAGE1, &w, &h, &c, 0);
     // create texture
-    // unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glGenTextures(2, texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -103,13 +108,31 @@ int main(int argc, char** argv) {
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
     } else {
-        SPDLOG_ERROR("failed to load texture");
+        SPDLOG_ERROR("failed to load texture1");
     }
+
+    data = stbi_load(TEXTURE_IMAGE2, &w, &h, &c, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        // GLenum target
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
+    } else {
+        SPDLOG_ERROR("failed to load texture2");
+    }
+
     // >>> shader program
     Shader shaderProgram(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
     shaderProgram.use();
+    shaderProgram.setInt("texture1", 0);
+    shaderProgram.setInt("texture2", 1);
     // >>> VAO
-    // unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
     // >>> VBO
@@ -136,7 +159,7 @@ int main(int argc, char** argv) {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glDeleteTextures(1, &texture);
+    glDeleteTextures(2, texture);
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
