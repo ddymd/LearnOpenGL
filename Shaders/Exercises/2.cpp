@@ -7,6 +7,7 @@
 #include "spdlog/spdlog.h"
 
 #include "shader.h"
+#include "config.h"
 
 float vertices[] = {
     // positions // colors
@@ -62,7 +63,7 @@ int main(int argc, char** argv) {
 
     glfwSetFramebufferSizeCallback(window, glfwWindowResize);
 
-    Shader ourShader("uniformright.vs", "shader.fs");
+    Shader ourShader(TOP_SRC_DIR"Shaders/uniformright.vs", TOP_SRC_DIR"Shaders/shader.fs");
     ourShader.use();
     ourShader.setFloat("moveRight", 0.5);
 

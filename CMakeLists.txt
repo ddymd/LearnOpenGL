@@ -11,9 +11,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-if(APPLE)
-    add_definitions(-DMacOS)
-endif()
+set(TOP_SRC_DIR "${CMAKE_SOURCE_DIR}/")
+
+configure_file(config.h.in config.h)
+include_directories(${PROJECT_BINARY_DIR})
 
 # OPENGL_LIBRARIES
 find_package(OpenGL REQUIRED)

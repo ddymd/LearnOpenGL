@@ -3,7 +3,7 @@
 
 #include "spdlog/spdlog.h"
 #include "shader.h"
-
+#include "config.h"
 
 float vertices[] = {
     // positions // colors
@@ -131,7 +131,7 @@ int main(int argc, char** argv) {
     glDeleteShader(fragmentShader);
 #endif
 
-    Shader ourShader("shader.vs", "shader.fs");
+    Shader ourShader(TOP_SRC_DIR"Shaders/shader.vs", TOP_SRC_DIR"Shaders/shader.fs");
 
     // VAO
     unsigned int VAO;

@@ -4,8 +4,11 @@
 #include "shader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "config.h"
 
-#define TEXTURE_IMAGE "container.jpg"
+#define TEXTURE_IMAGE RESOURCES_DIR"container.jpg"
+#define VERTEX_SHADER_SRC TOP_SRC_DIR"Textures/texture.vs"
+#define FRAGMENT_SHADER_SRC TOP_SRC_DIR"Textures/texture.fs"
 
 float vertices[] = {
     // positions      // colors         // texture coords
@@ -54,6 +57,7 @@ int main(int argc, char** argv) {
         SPDLOG_CRITICAL("initialize glfw failed");
         return -1;
     }
+
     // >>> set glfw error callback
     glfwSetErrorCallback(glfwErrorCallback);
     // create window
@@ -102,7 +106,7 @@ int main(int argc, char** argv) {
         SPDLOG_ERROR("failed to load texture");
     }
     // >>> shader program
-    Shader shaderProgram("texture.vs", "texture.fs");
+    Shader shaderProgram(VERTEX_SHADER_SRC, FRAGMENT_SHADER_SRC);
     shaderProgram.use();
     // >>> VAO
     // unsigned int VAO;

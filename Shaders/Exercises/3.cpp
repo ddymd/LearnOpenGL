@@ -9,6 +9,7 @@
 #include "spdlog/spdlog.h"
 
 #include "shader.h"
+#include "config.h"
 
 float vertices[] = {
     // positions // colors
@@ -61,7 +62,7 @@ int main(int argc, char** argv) {
     }
 
     // shader program
-    Shader shaderProgram("shaderpos.vs", "shaderpos.fs");
+    Shader shaderProgram(TOP_SRC_DIR"Shaders/shaderpos.vs", TOP_SRC_DIR"Shaders/shaderpos.fs");
     shaderProgram.use();
 
     // VAO

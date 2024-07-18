@@ -6,6 +6,7 @@
 #include "spdlog/spdlog.h"
 
 #include "shader.h"
+#include "config.h"
 
 float vertices[] = {
     // positions // colors
@@ -61,7 +62,7 @@ int main(int argc, char** argv) {
 
     glfwSetFramebufferSizeCallback(window, resizeCallback);
 
-    Shader upsidedown("upsidedown.vs", "shader.fs");
+    Shader upsidedown(TOP_SRC_DIR"Shaders/upsidedown.vs", TOP_SRC_DIR"Shaders/shader.fs");
     unsigned int VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
