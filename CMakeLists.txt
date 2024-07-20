@@ -29,6 +29,9 @@ add_subdirectory(3rdparty/glfw)
 # spdlog
 add_subdirectory(3rdparty/spdlog)
 
+# glm
+add_subdirectory(3rdparty/glm)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty)
 set(3RD_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.c
@@ -45,3 +48,4 @@ set(SHADER_SRC
 add_subdirectory(HelloTriangle)
 add_subdirectory(Shaders)
 add_subdirectory(Textures)
+add_subdirectory(Transformations)
