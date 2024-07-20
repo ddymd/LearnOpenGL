@@ -51,8 +51,6 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-glm::vec3 vectrans(0.5f, -0.5f, 0.f);
-
 int main(int argc, char** argv) {
     // init glfw
     if (!glfwInit()) {
