@@ -95,39 +95,39 @@ int main(int argc, char** argv) {
     int w, h, c;
     unsigned char* data = stbi_load(TEXTURE_IMAGE1, &w, &h, &c, 0);
     if (data) {
-        glad_glActiveTexture(GL_TEXTURE0);
-        glad_glBindTexture(GL_TEXTURE_2D, textures[0]);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glad_glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         SPDLOG_ERROR("load texture1({}) failed", TEXTURE_IMAGE1);
     }
 
     data = stbi_load(TEXTURE_IMAGE2, &w, &h, &c, 0);
     if (data) {
-        glad_glActiveTexture(GL_TEXTURE1);
-        glad_glBindTexture(GL_TEXTURE_2D, textures[1]);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glad_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glad_glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         SPDLOG_ERROR("load texture2({}) failed", TEXTURE_IMAGE2);
     }
 
     // VAO, VBO, EBO
     unsigned int VAO, VBO, EBO;
-    glad_glGenVertexArrays(1, &VAO);
-    glad_glBindVertexArray(VAO);
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
 
-    glad_glGenBuffers(1, &VBO);
-    glad_glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &EBO);
@@ -135,14 +135,14 @@ int main(int argc, char** argv) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // vertex attributes
-    glad_glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
-    glad_glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
-    glad_glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
-    glad_glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
 
-    glad_glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
-    glad_glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // shader program
     Shader sp(SRC_VSHADER, SRC_FSHADER);
@@ -156,20 +156,20 @@ int main(int argc, char** argv) {
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glad_glBindVertexArray(VAO);
+        glBindVertexArray(VAO);
 
         glm::mat4 trans0(1.0);
         trans0 = glm::translate(trans0, {0.5f,-0.5f,0.f});
         trans0 = glm::rotate(trans0, (float)glfwGetTime(), {0.f,0.f,1.f});
         glUniformMatrix4fv(translid, 1, GL_FALSE, glm::value_ptr(trans0));
-        glad_glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glm::mat4 trans1(1.0);
         trans1 = glm::translate(trans1, {-0.5f,0.5f,0.f});
         float scaleAmount = static_cast<float>(sin(glfwGetTime()));
         trans1 = glm::scale(trans1, {scaleAmount, scaleAmount, scaleAmount});
         glUniformMatrix4fv(translid, 1, GL_FALSE, glm::value_ptr(trans1));
-        glad_glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
