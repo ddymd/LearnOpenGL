@@ -1,5 +1,6 @@
 #include "shader.h"
 #include "glad/glad.h"
+#include "glm/gtc/type_ptr.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -91,4 +92,8 @@ void Shader::setInt(const std::string& name, int value) const {
 
 void Shader::setFloat(const std::string& name, float value) const {
     glUniform2f(glGetUniformLocation(id, name.c_str()), value, value);
+}
+
+void Shader::setMat4(const std::string& name, const glm::mat4& value) const {
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
