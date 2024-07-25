@@ -113,6 +113,45 @@ void processInput(GLFWwindow* window) {
         cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
     }
 }
+float lastX = 400;
+float lastY = 300;
+float yaw, pitch;
+bool firstMouse = true;
+void glfwCursorPosCB(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    const float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    if (pitch > 89.f) pitch = 89.f;
+    if (pitch < -89.f) pitch = -89.f;
+    pitch += yoffset;
+
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(direction);
+}
+
+float zoom = 45.f;
+void scrollCB(GLFWwindow* window, double xoffset, double yoffset) {
+    zoom -= (float)yoffset;
+    if (zoom < 1.f) zoom = 1.f;
+    if (zoom > 45.f) zoom = 45.f;
+
+    SPDLOG_INFO("zoom xoffset: {}, yoffset: {}", xoffset, yoffset);
+}
 
 int main(int argc, char** argv) {
     // init glfw
@@ -215,6 +254,11 @@ int main(int argc, char** argv) {
 
     float radius = 10.f;
     glEnable(GL_DEPTH_TEST);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, glfwCursorPosCB);
+    glfwSetScrollCallback(window, scrollCB);
+
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
@@ -234,6 +278,9 @@ int main(int argc, char** argv) {
         cameraSpeed = 2.5f * deltaTime;
         mview = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         sp.setMat4("view", mview);
+
+        mproj = glm::perspective(glm::radians(zoom), 4.f/3.f, 0.1f, 100.f);
+        sp.setMat4("proj", mproj);
 
         glBindVertexArray(VAO);
         for (int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); ++i) {
