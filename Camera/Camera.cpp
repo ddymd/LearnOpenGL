@@ -89,6 +89,9 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+float deltaTime = 0.f; // Time between current frame and last frame
+float lastFrame = 0.f; // Time of last frame
+
 void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
@@ -103,11 +106,11 @@ void processInput(GLFWwindow* window) {
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        cameraPos -= cameraSpeed * glm::normalize(glm::cross(cameraFront,cameraUp));
+        cameraPos -= cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront,cameraUp));
+        cameraPos += cameraSpeed * glm::normalize(glm::cross(cameraFront, cameraUp));
     }
 }
 
@@ -216,11 +219,19 @@ int main(int argc, char** argv) {
         processInput(window);
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-
+        // >>>>>>>>>>>>>>>>> 1 >>>>>>>>>>>>>>>>>>>>
+        // float camX = sin(glfwGetTime()) * radius;
+        // float camZ = cos(glfwGetTime()) * radius;
         // mview = glm::lookAt(glm::vec3{camX, 0.f, camZ}, glm::vec3{0.f, 0.f, 0.f}, glm::vec3{0.f, 1.f, 0.f});
+
+        // >>>>>>>>>>>>>>>>> 2 >>>>>>>>>>>>>>>>>>>>
+        // mview = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+        // >>>>>>>>>>>>>>>>> 3 >>>>>>>>>>>>>>>>>>>>
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        cameraSpeed = 2.5f * deltaTime;
         mview = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         sp.setMat4("view", mview);
 
