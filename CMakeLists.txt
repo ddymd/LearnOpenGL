@@ -45,6 +45,12 @@ set(SHADER_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.h
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Camera)
+set(CAMERA_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.h
+)
+
 add_subdirectory(HelloTriangle)
 add_subdirectory(Shaders)
 add_subdirectory(Textures)
