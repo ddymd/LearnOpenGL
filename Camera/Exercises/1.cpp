@@ -86,7 +86,11 @@ void glfwResizeCB(GLFWwindow* window, int w, int h) {
     glViewport(0, 0, w, h);
 }
 
-void processInput(GLFWwindow* window) {
+glm::vec3 camFront(0.f,0.f,-1.f);
+glm::vec3 camPos(0.f, 0.f, 5.f);
+glm::vec3 camUp(0.f, 1.f, 0.f);
+// float camSpeed = 0.005f;
+void processInput(GLFWwindow* window, float camSpeed) {
     // escape key
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
@@ -94,26 +98,58 @@ void processInput(GLFWwindow* window) {
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         // forward
+        camPos += camSpeed * camFront;
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         // backward
+        camPos -= camSpeed * camFront;
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         // left
+        camPos -= camSpeed * glm::normalize(glm::cross(camFront, camUp));
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         // right
+        camPos += camSpeed * glm::normalize(glm::cross(camFront, camUp));
     }
+    camPos.y = 0;
+}
+bool bIsFirstMouse = true;
+float lastX, lastY;
+float sensitivity = 0.1f;
+float pitch = 0.f;
+float yaw = -90.f;
+
+void mouseMoveCB(GLFWwindow* window, double xpos, double ypos) {
+    if (bIsFirstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        bIsFirstMouse = false;
+        return;
+    }
+    float xoffset = (xpos - lastX) * sensitivity;
+    float yoffset = (ypos - lastY) * sensitivity;
+    lastX = xpos;
+    lastY = ypos;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.f) pitch = 89.f;
+    if (pitch < -89.f) pitch = -89.f;
+
+    float fyaw = glm::radians(yaw);
+    float fpitch = glm::radians(pitch);
+    camFront = glm::normalize(glm::vec3{cos(fyaw)*cos(fpitch), sin(fpitch), sin(fyaw)*cos(fpitch)});
 }
 
-void mouseMoveCB(GLFWwindow* window, double xoffset, double yoffset) {
-
+float zoom= 45.f;
+void mouseScollCB(GLFWwindow* window, double xoffset, double yoffset) {
+    zoom += yoffset;
 }
-
-void mouseScollCB(GLFWwindow* window, double xoffset, double yoffset) {}
 
 int main(int argc, char** argv) {
     // init glfw
@@ -219,12 +255,20 @@ int main(int argc, char** argv) {
     sp.setInt("texture1", 0);
     sp.setInt("texture2", 1);
 
-    glm::mat4 mview(1.f);
-    mview = glm::translate(mview, {0.f, 0.f, 5.f});
+    // glm::mat4 mview(1.f);
+    // mview = glm::translate(mview, {0.f, 0.f, -5.f});
+    glm::mat4 mview = glm::lookAt(camPos, {0.f,0.f,0.f}, {0.f,1.f,0.f});
     sp.setMat4("view", mview);
 
+    glm::mat4 mproj(1.f);
+    mproj = glm::perspective(glm::radians(45.f), 4.f/3.f, 0.1f, 100.f);
+    sp.setMat4("proj", mproj);
+
+    static float lastFrame = 0.f;
     while (!glfwWindowShouldClose(window)) {
-        processInput(window);
+        float curFrame = glfwGetTime();
+        processInput(window, 5.5f * (curFrame-lastFrame));
+        lastFrame = curFrame;
 
         // textures
         // glActiveTexture(GL_TEXTURE0);
@@ -234,11 +278,19 @@ int main(int argc, char** argv) {
 
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glm::vec3 lookat = camPos+camFront;
+        lookat.y = 0;
+        mview = glm::lookAt(camPos, lookat, {0.f,1.f,0.f});
+        sp.setMat4("view", mview);
+
+        mproj = glm::perspective(glm::radians(zoom), 4.f/3.f, 0.1f, 100.f);
+        sp.setMat4("proj", mproj);
 
         glBindVertexArray(VAO);
         for (int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); ++i) {
             glm::mat4 mmodel(1.f);
             mmodel = glm::translate(mmodel, cubePositions[i]);
+            mmodel = glm::rotate(mmodel, glm::radians(20.f*i), {1.0f, 0.3f, 0.5f});
             sp.setMat4("model", mmodel);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
