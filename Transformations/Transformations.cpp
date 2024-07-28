@@ -14,7 +14,7 @@
 #define TEXTURE_IMAGE1 RESOURCES_DIR"container.jpg"
 #define TEXTURE_IMAGE2 RESOURCES_DIR"awesomeface.png"
 
-float vertices[] = {
+float mvertices[] = {
     // positions      // colors         // texture coords
     0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
     0.5f,-0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mvertices), mvertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

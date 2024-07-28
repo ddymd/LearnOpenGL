@@ -5,7 +5,7 @@
 #include "shader.h"
 #include "config.h"
 
-float vertices[] = {
+float mvertices[] = {
     // positions // colors
     0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
     -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mvertices), mvertices, GL_STATIC_DRAW);
     // GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);

@@ -21,7 +21,7 @@
 #define SRC_VERTEX_SHADER TOP_SRC_DIR"CoordinateSystems/Exercises/texture1.vs"
 #define SRC_FRAGMENT_SHADER TOP_SRC_DIR"CoordinateSystems/Exercises/texture1.fs"
 
-float vertices[] = {
+float mvertices[] = {
     -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
     0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
@@ -65,7 +65,7 @@ float vertices[] = {
     -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 };
 
-glm::vec3 cubePositions[] = {
+glm::vec3 mcubePositions[] = {
     glm::vec3( 0.0f, 0.0f, 0.0f),
     glm::vec3( 2.0f, 5.0f, -15.0f),
     glm::vec3(-1.5f, -2.2f, -2.5f),
@@ -167,7 +167,7 @@ int main(int argc, char** argv) {
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(mvertices), mvertices, GL_STATIC_DRAW);
 
     // vertex attributes
     // vertexs
@@ -210,9 +210,9 @@ int main(int argc, char** argv) {
 
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); ++i) {
+        for (int i = 0; i < sizeof(mcubePositions)/sizeof(mcubePositions[0]); ++i) {
             glm::mat4 mmat(1.f);
-            mmat = glm::translate(mmat, cubePositions[i]);
+            mmat = glm::translate(mmat, mcubePositions[i]);
             // mmat = glm::rotate(mmat, glm::radians(30.f), {1.f, 1.f, 1.f});
             // glUniformMatrix4fv(modelid, 1, GL_FALSE, glm::value_ptr(mmat));
             sp.setMat4("model", mmat);
