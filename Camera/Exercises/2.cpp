@@ -18,9 +18,12 @@
 
 void glfwErrorCB(int ec, const char* emsg);
 void glfwResizeCB(GLFWwindow* window, int w, int h);
-void processInput(GLFWwindow* window);
-void cursorPosCB(GLFWwindow* window, double xpos, double ypos);
+glm::vec3 camFront(0.f, 0.f, -1.f);
+void processInput(GLFWwindow* window, float camSpeed, glm::vec3& camPos, const glm::vec3& camFront);
+void cursorPosCB(GLFWwindow* window, double xpos, double ypos/*, glm::vec3& camFront*/);
+float fov = 45.f;
 void cursorScollCB(GLFWwindow* window, double xoffset, double yoffset);
+glm::mat4 mlookAt(const glm::vec3& camPos, const glm::vec3& camTgt, const glm::vec3& worldUp = glm::vec3(0.f, 1.f, 0.f));
 
 int main(int argc, char** argv) {
     if (!glfwInit()) {
@@ -55,6 +58,14 @@ int main(int argc, char** argv) {
     glfwSetFramebufferSizeCallback(window, glfwResizeCB);
     // enable depth test
     glEnable(GL_DEPTH_TEST);
+
+    // set cursor postion callback
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, cursorPosCB);
+
+    // set scroll callback
+    glfwSetScrollCallback(window, cursorScollCB);
+
     SPDLOG_INFO("glfw and glad");
 
     // textures
@@ -110,15 +121,34 @@ int main(int argc, char** argv) {
     sp.use();
     sp.setInt("texture1", 0);
     sp.setInt("texture2", 1);
-
+    // model
     glm::mat4 mmodel(1.f);
-
+    // view
+    glm::mat4 mview{1.f};
+    // proj
+    glm::mat4 mproj{1.f};
+    glm::vec3 camPos(0.f, 0.f, 5.f);
+    float lastFrame = 0.f;
     while (!glfwWindowShouldClose(window)) {
-        processInput(window);
+        float currentFrame = glfwGetTime();
+        processInput(window, 5.f*(currentFrame-lastFrame), camPos, camFront);
+        lastFrame = currentFrame;
         glClearColor(0.2f, 0.3f, 0.3f, 0.02f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, textures[0]);
+        // glActiveTexture(GL_TEXTURE1);
+        // glBindTexture(GL_TEXTURE_2D, textures[1]);
+
         glBindVertexArray(VAO);
+        // target = camPos + camFront
+        mview = mlookAt(camPos, camPos+camFront, {0.f, 1.f, 0.f});
+        sp.setMat4("view", mview);
+
+        mproj = glm::perspective(glm::radians(fov), 4.f/3.f, 0.1f, 100.f);
+        sp.setMat4("proj", mproj);
+
         for (int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); ++i) {
             mmodel = glm::mat4(1.f);
             mmodel = glm::translate(mmodel, cubePositions[i]);
@@ -143,17 +173,85 @@ void glfwResizeCB(GLFWwindow* window, int w, int h) {
     glViewport(0, 0, w, h);
 }
 
-void processInput(GLFWwindow* window) {
+glm::vec3 worldUp(0.f, 1.f, 0.f);
+void processInput(GLFWwindow* window, float camSpeed, glm::vec3& camPos, const glm::vec3& camFront) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+    // forward
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        camPos += camSpeed * camFront;
+    }
+    // backward
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        camPos -= camSpeed * camFront;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        camPos -= camSpeed * glm::normalize(glm::cross(camFront, worldUp));
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        camPos += camSpeed * glm::normalize(glm::cross(camFront, worldUp));
+    }
 }
 
-void cursorPosCB(GLFWwindow* window, double xpos, double ypos) {
+float sensitivity = 0.01f;
+bool bISFirstCursor = true;
+float xlastpos, ylastpos;
+float yaw = -90.f, pitch = 0.f;
+void cursorPosCB(GLFWwindow* window, double xpos, double ypos/*, glm::vec3& camFront*/) {
+    if (bISFirstCursor) {
+        xlastpos = xpos;
+        ylastpos = ypos;
+        bISFirstCursor = false;
+        return;
+    }
+    float xoffset = sensitivity * (xpos - xlastpos);
+    xlastpos = xpos;
+    float yoffset = sensitivity * (ypos - ylastpos);
+    ylastpos = ypos;
 
+    yaw += xoffset;
+    pitch += yoffset;
+    if (pitch > 89.f) pitch = 89.f;
+    if (pitch < -89.f) pitch = -89.f;
+
+    float x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    float y = sin(glm::radians(pitch));
+    float z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    camFront = glm::normalize(glm::vec3(x,y,z));
 }
 
 void cursorScollCB(GLFWwindow* window, double xoffset, double yoffset) {
+    fov -= yoffset;
+    if (fov < 1.f) fov = 1.f;
+    if (fov > 90.f) fov = 90.f;
+}
 
+glm::mat4 mlookAt(const glm::vec3& camPos, const glm::vec3& camTgt, const glm::vec3& worldUp) {
+    glm::vec3 camDir = glm::normalize(camPos - camTgt);     // zaxis
+    glm::vec3 camRight = glm::normalize(glm::cross(glm::normalize(worldUp), camDir));       // xaxis
+    glm::vec3 camUp = glm::cross(camDir, camRight);     // yaxis
+
+    glm::mat4 translation = glm::mat4(1.0f);
+    translation[3][0] = -camPos.x;
+    translation[3][1] = -camPos.y;
+    translation[3][2] = -camPos.z;
+
+    glm::mat4 rotation = glm::mat4(1.0f);
+    rotation[0][0] = camRight.x;
+    rotation[1][0] = camRight.y;
+    rotation[2][0] = camRight.z;
+
+    rotation[0][1] = camUp.x;
+    rotation[1][1] = camUp.y;
+    rotation[2][1] = camUp.z;
+
+    rotation[0][2] = camDir.x;
+    rotation[1][2] = camDir.y;
+    rotation[2][2] = camDir.z;
+
+    return rotation*translation;
 }
 
