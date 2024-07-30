@@ -57,3 +57,5 @@ add_subdirectory(Textures)
 add_subdirectory(Transformations)
 add_subdirectory(CoordinateSystems)
 add_subdirectory(Camera)
+
+add_subdirectory(Lighting)
