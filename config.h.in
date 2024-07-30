@@ -12,6 +12,9 @@
 #define TEXTURE0 RESOURCES_DIR"container.jpg"
 #define TEXTURE1 RESOURCES_DIR"awesomeface.png"
 
+constexpr unsigned int SCR_WIDTH = 800;
+constexpr unsigned int SCR_HEIGHT = 600;
+
 float vertices[] = {
     -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
