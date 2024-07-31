@@ -11,9 +11,11 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 
+out vec3 fragpos;
+
 void main() {
     gl_Position = proj * view * model * vec4(aPos, 1.0);
-    // gl_Position = vec4(aPos, 1.0);
-    ourNor = aNor;
+    fragpos = vec3(model * vec4(aPos, 1.0));
+    ourNor = mat3(transpose(inverse(model))) * aNor;
     ourCoord = aCoord;
 }

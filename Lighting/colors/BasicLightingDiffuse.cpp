@@ -135,11 +135,14 @@ int main(int argc, char** argv) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    glm::vec3 litpos(1.2f, 1.f, 2.f);
+
     // shader program
     Shader objsp(SRC_OBJ_VERTEX, SRC_OBJ_FRAGMENT);
     objsp.use();
     objsp.setVec3("objcolor", 1.0f, 0.5f, 0.31f);
     objsp.setVec3("litcolor", 1.0f, 1.0f, 1.0f);
+    objsp.setVec3("litpos", litpos.x, litpos.y, litpos.z);
     glm::mat4 mmodel(1.f);
     objsp.setMat4("model", mmodel);
 
@@ -147,7 +150,7 @@ int main(int argc, char** argv) {
     litsp.use();
     litsp.setVec3("litcolor", 1.0f, 1.0f, 1.0f);
     mmodel = glm::mat4(1.f);
-    mmodel = glm::translate(mmodel, glm::vec3(1.2f, 1.f, 2.f));
+    mmodel = glm::translate(mmodel, litpos);
     mmodel = glm::scale(mmodel, glm::vec3(0.2f));
     litsp.setMat4("model", mmodel);
 
@@ -164,6 +167,7 @@ int main(int argc, char** argv) {
         glm::mat4 mproj = glm::perspective(glm::radians(mcam.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
 
         objsp.use();
+        objsp.setVec3("viewpos", mcam.Position.x, mcam.Position.y, mcam.Position.z);
         objsp.setMat4("view", mview);
         objsp.setMat4("proj", mproj);
         glBindVertexArray(VAO);

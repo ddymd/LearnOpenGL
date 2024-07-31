@@ -16,4 +16,4 @@ target_link_libraries(${PROJECT_NAME} Threads::Threads glfw ${OPENGL_LIBRARIES} 
 add_executable(${PROJECT_NAME}_BasicLightingDiffuse ${CMAKE_CURRENT_SOURCE_DIR}/BasicLightingDiffuse.cpp ${3RD_SRC} ${SHADER_SRC} ${CAMERA_SRC})
 target_link_libraries(${PROJECT_NAME}_BasicLightingDiffuse Threads::Threads glfw ${OPENGL_LIBRARIES} spdlog::spdlog glm)
 
-# add_subdirectory(Exercises)
+add_subdirectory(Exercises)
