@@ -32,30 +32,35 @@ add_subdirectory(3rdparty/spdlog)
 # glm
 add_subdirectory(3rdparty/glm)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty)
 set(3RD_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.c
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/glad/glad.h
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb_image.h
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Shaders)
 set(SHADER_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.h
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Camera)
 set(CAMERA_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.h
 )
 
-add_subdirectory(HelloTriangle)
-add_subdirectory(Shaders)
-add_subdirectory(Textures)
-add_subdirectory(Transformations)
-add_subdirectory(CoordinateSystems)
-add_subdirectory(Camera)
+add_library(commonlib ${3RD_SRC} ${SHADER_SRC} ${CAMERA_SRC})
+target_include_directories(commonlib PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Shaders>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Camera>
+)
+target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm)
+
+# add_subdirectory(HelloTriangle)
+# add_subdirectory(Shaders)
+# add_subdirectory(Textures)
+# add_subdirectory(Transformations)
+# add_subdirectory(CoordinateSystems)
+# add_subdirectory(Camera)
 
 add_subdirectory(Lighting)
