@@ -142,6 +142,7 @@ int main(int argc, char** argv) {
     LIT_SP.setMat4("model", mlit);
 
     float lastFrame = 0;
+    float radius = 3.f;
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -149,6 +150,9 @@ int main(int argc, char** argv) {
         float currFrame = glfwGetTime();
         ProcessInput(window, currFrame-lastFrame);
         lastFrame = currFrame;
+
+        litPos.x = sin(glfwGetTime()) * radius;
+        litPos.z = cos(glfwGetTime()) * radius;
 
         glm::mat4 mview = viewCam.GetViewMatrix();
         glm::mat4 mproj = glm::perspective(glm::radians(viewCam.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
@@ -162,6 +166,10 @@ int main(int argc, char** argv) {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         LIT_SP.use();
+        mlit = glm::mat4(1.f);
+        mlit = glm::translate(mlit, litPos);
+        mlit = glm::scale(mlit, glm::vec3(0.2f));
+        LIT_SP.setMat4("model", mlit);
         LIT_SP.setMat4("view", mview);
         LIT_SP.setMat4("proj", mproj);
         glBindVertexArray(VAO_LIT);
