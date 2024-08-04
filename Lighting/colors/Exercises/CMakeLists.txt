@@ -12,7 +12,7 @@ add_executable(${PROJECT_NAME}_2 ${CMAKE_CURRENT_SOURCE_DIR}/2.cpp)
 target_link_libraries(${PROJECT_NAME}_2 Threads::Threads ${OPENGL_LIBRARIES} commonlib)
 
 add_executable(${PROJECT_NAME}_3 ${CMAKE_CURRENT_SOURCE_DIR}/3.cpp)
-target_link_libraries(${PROJECT_NAME}_2 Threads::Threads ${OPENGL_LIBRARIES} commonlib)
+target_link_libraries(${PROJECT_NAME}_3 Threads::Threads ${OPENGL_LIBRARIES} commonlib)
 
 add_executable(${PROJECT_NAME}_4 ${CMAKE_CURRENT_SOURCE_DIR}/4.cpp)
-target_link_libraries(${PROJECT_NAME}_2 Threads::Threads ${OPENGL_LIBRARIES} commonlib)
+target_link_libraries(${PROJECT_NAME}_4 Threads::Threads ${OPENGL_LIBRARIES} commonlib)
