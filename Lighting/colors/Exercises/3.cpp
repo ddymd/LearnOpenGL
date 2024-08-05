@@ -11,10 +11,10 @@
 #include "camera.h"
 #include "shader.h"
 
-#define SRC_VSHADER_OBJ TOP_SRC_DIR"Lighting/colors/Exercises/obj_shader3.vs"
-#define SRC_FSHADER_OBJ TOP_SRC_DIR"Lighting/colors/Exercises/obj_shader3.fs"
-#define SRC_VSHADER_LIT TOP_SRC_DIR"Lighting/colors/Exercises/lit_shader3.vs"
-#define SRC_FSHADER_LIT TOP_SRC_DIR"Lighting/colors/Exercises/lit_shader3.fs"
+#define SRC_VSHADER_OBJ TOP_SRC_DIR"Lighting/Colors/Exercises/obj_shader3.vs"
+#define SRC_FSHADER_OBJ TOP_SRC_DIR"Lighting/Colors/Exercises/obj_shader3.fs"
+#define SRC_VSHADER_LIT TOP_SRC_DIR"Lighting/Colors/Exercises/lit_shader3.vs"
+#define SRC_FSHADER_LIT TOP_SRC_DIR"Lighting/Colors/Exercises/lit_shader3.fs"
 
 glm::vec3 litPos(1.2f, 1.f, 2.f);
 glm::vec3 litColor(1.0f, 1.0f, 1.0f);

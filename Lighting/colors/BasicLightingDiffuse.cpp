@@ -12,11 +12,11 @@
 #include "shader.h"
 #include "camera.h"
 
-#define SRC_OBJ_VERTEX TOP_SRC_DIR"Lighting/colors/obj_shader.vs"
-#define SRC_OBJ_FRAGMENT TOP_SRC_DIR"Lighting/colors/obj_shader.fs"
+#define SRC_OBJ_VERTEX TOP_SRC_DIR"Lighting/Colors/obj_shader.vs"
+#define SRC_OBJ_FRAGMENT TOP_SRC_DIR"Lighting/Colors/obj_shader.fs"
 
-#define SRC_LIT_VERTEX TOP_SRC_DIR"Lighting/colors/lit_shader.vs"
-#define SRC_LIT_FRAGMENT TOP_SRC_DIR"Lighting/colors/lit_shader.fs"
+#define SRC_LIT_VERTEX TOP_SRC_DIR"Lighting/Colors/lit_shader.vs"
+#define SRC_LIT_FRAGMENT TOP_SRC_DIR"Lighting/Colors/lit_shader.fs"
 
 Camera mcam(glm::vec3(0.f, 0.f, 5.f));
 void glfwErrorCB(int ec, const char* emsg) {

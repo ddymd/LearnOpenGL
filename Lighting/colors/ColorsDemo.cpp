@@ -10,9 +10,9 @@
 #include "shader.h"
 #include "camera.h"
 
-#define SRC_VERTEX_SHADER TOP_SRC_DIR"Lighting/colors/shader.vs"
-#define SRC_FRAGMENT_SHADER TOP_SRC_DIR"Lighting/colors/shader.fs"
-#define SRC_FRAGMENT_SHADER_LIGHT TOP_SRC_DIR"Lighting/colors/shader_light.fs"
+#define SRC_VERTEX_SHADER TOP_SRC_DIR"Lighting/Colors/shader.vs"
+#define SRC_FRAGMENT_SHADER TOP_SRC_DIR"Lighting/Colors/shader.fs"
+#define SRC_FRAGMENT_SHADER_LIGHT TOP_SRC_DIR"Lighting/Colors/shader_light.fs"
 
 Camera camera({0.f, 0.f, 3.f});
 float lastX = SCR_WIDTH / 2.f;
