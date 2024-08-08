@@ -94,11 +94,20 @@ int main(int argc, char** argv) {
     litsp.setMat4("model", litmodel);
     litsp.setVec3("litColor", litColor);
 
+    glm::vec3 objlitcolor;
     float lframe = 0.f;
     while (!glfwWindowShouldClose(window)) {
         float cframe = glfwGetTime();
         ProcessInputs(window, cframe-lframe);
         lframe = cframe;
+
+        objlitcolor.x = sin(cframe * 2.0f);
+        objlitcolor.y = sin(cframe * 0.7f);
+        objlitcolor.z = sin(cframe * 1.3f);
+
+        glm::vec3 diffuseColor = objlitcolor * glm::vec3(0.5f);
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+
         glClearColor(0.f, 0.f, 0.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -109,6 +118,10 @@ int main(int argc, char** argv) {
         objsp.setMat4("view", mview);
         objsp.setMat4("proj", mproj);
         objsp.setVec3("camPos", mcam.Position);
+
+        objsp.setVec3("material.ambient", ambientColor);
+        objsp.setVec3("material.diffuse", diffuseColor);
+
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
