@@ -16,7 +16,7 @@ glm::vec3 litPos(1.2f, 1.f, 2.f);
 glm::vec3 litColor(1.0f, 1.0f, 1.0f);
 glm::vec3 objColor(1.0f, 0.5f, 0.31f);
 
-Camera mcam(glm::vec3(0.f, 0.f, 5.f));
+Camera mcam(glm::vec3(0.f, 0.f, 3.f));
 
 void GLFWErrorCB(int ec, const char* emsg);
 void GLFWResizeCB(GLFWwindow* window, int w, int h);
@@ -74,14 +74,18 @@ int main(int argc, char** argv) {
     objsp.use();
     objsp.setMat4("model", glm::mat4(1.f));
     objsp.setVec3("litColor", litColor);
-    objsp.setVec3("objColor", objColor);
+    // objsp.setVec3("objColor", objColor);
     objsp.setVec3("litPos", litPos);
+    objsp.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    objsp.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    objsp.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    objsp.setFloat("material.shininess", 32.0f);
 
     Shader litsp(SRC_VSHADER_LIT, SRC_FSHADER_LIT);
     litsp.use();
     glm::mat4 litmodel(1.f);
     litmodel = glm::translate(litmodel, litPos);
-    litmodel = glm::scale(litmodel, glm::vec3(0.3f));
+    litmodel = glm::scale(litmodel, glm::vec3(0.2f));
     litsp.setMat4("model", litmodel);
     litsp.setVec3("litColor", litColor);
 

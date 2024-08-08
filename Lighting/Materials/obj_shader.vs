@@ -13,7 +13,5 @@ out vec3 fPos;
 void main() {
     gl_Position = proj * view * model * vec4(aPos, 1.0);
     fNor = mat3(transpose(inverse(model)))*aNor;
-    fPos = aPos;
+    fPos = vec3(model * vec4(aPos, 1.0));
 }
-
-
