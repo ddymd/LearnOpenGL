@@ -75,11 +75,16 @@ int main(int argc, char** argv) {
     objsp.setMat4("model", glm::mat4(1.f));
     objsp.setVec3("litColor", litColor);
     // objsp.setVec3("objColor", objColor);
-    objsp.setVec3("litPos", litPos);
+    // objsp.setVec3("litPos", litPos);
     objsp.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
     objsp.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
     objsp.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
     objsp.setFloat("material.shininess", 32.0f);
+
+    objsp.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+    objsp.setVec3("light.diffuse", 0.5, 0.5f, 0.5f);
+    objsp.setVec3("light.specular", 1.f, 1.f, 1.f);
+    objsp.setVec3("light.position", litPos);
 
     Shader litsp(SRC_VSHADER_LIT, SRC_FSHADER_LIT);
     litsp.use();
