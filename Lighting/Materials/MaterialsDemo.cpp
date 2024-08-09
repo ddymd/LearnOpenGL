@@ -119,8 +119,8 @@ int main(int argc, char** argv) {
         objsp.setMat4("proj", mproj);
         objsp.setVec3("camPos", mcam.Position);
 
-        objsp.setVec3("material.ambient", ambientColor);
-        objsp.setVec3("material.diffuse", diffuseColor);
+        objsp.setVec3("light.ambient", ambientColor);
+        objsp.setVec3("light.diffuse", diffuseColor);
 
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
