@@ -12,6 +12,8 @@
 
 #define TEXTURE0 RESOURCES_DIR"container.jpg"
 #define TEXTURE1 RESOURCES_DIR"awesomeface.png"
+#define TEXTURE_C0 RESOURCES_DIR"container2.png"
+#define TEXTURE_CS RESOURCES_DIR"container2_specular.png"
 
 constexpr unsigned int SCR_WIDTH = 800;
 constexpr unsigned int SCR_HEIGHT = 600;
