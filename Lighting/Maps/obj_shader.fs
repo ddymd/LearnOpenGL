@@ -22,10 +22,10 @@ uniform vec3 camPos;
 
 in vec3 fNor;
 in vec3 fPos;
-in vec2 aCoord;
+in vec2 fCoord;
 
 void main() {
-    vec3 tt = texture(texture0, aCoord).rgb;
+    vec3 tt = texture(texture0, fCoord).rgb;
 
     // ambient
     vec3 ambcolor = light.ambient * tt;
@@ -40,6 +40,6 @@ void main() {
 
     vec3 retColor = ambcolor + diffusecolor + specularcolor;
 
-    // FragColor = texture(texture0, aCoord) * vec4(retColor, 1.0);
+    // FragColor = texture(texture0, fCoord) * vec4(retColor, 1.0);
     FragColor = vec4(retColor, 1.0);
 }
