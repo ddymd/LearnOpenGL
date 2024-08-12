@@ -63,5 +63,6 @@ target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm)
 # add_subdirectory(CoordinateSystems)
 # add_subdirectory(Camera)
 
-add_subdirectory(Lighting/Colors)
+# add_subdirectory(Lighting/Colors)
 add_subdirectory(Lighting/Materials)
+add_subdirectory(Lighting/Maps)
