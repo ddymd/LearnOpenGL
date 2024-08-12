@@ -66,14 +66,14 @@ int main(int argc, char** argv) {
     glfwSetScrollCallback(window, GLFWScrollCB);
 
     // textures
-    unsigned int textures;
-    glGenTextures(1, &textures);
+    unsigned int textures[2];
+    glGenTextures(2, textures);
     int w, h, c;
     unsigned char* data = stbi_load(TEXTURE_C0, &w, &h, &c, 0);
     SPDLOG_INFO("comp: {}", c);
     if (data) {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures);
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -83,6 +83,22 @@ int main(int argc, char** argv) {
         stbi_image_free(data);
     } else {
         SPDLOG_ERROR("Load Texture({}) Failed", TEXTURE_C0);
+    }
+
+    data = stbi_load(TEXTURE_CS, &w, &h, &c, 0);
+    SPDLOG_INFO("comp: {}", c);
+    if (data) {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
+    } else {
+        SPDLOG_ERROR("Load Texture({}) Failed", TEXTURE_CS);
     }
 
     unsigned int VAO[2], VBO;
@@ -109,16 +125,16 @@ int main(int argc, char** argv) {
 
     Shader objsp(SRC_VSHADER_OBJ, SRC_FSHADER_OBJ);
     objsp.use();
-    objsp.setInt("texture0", 0);
     objsp.setMat4("model", glm::mat4(1.f));
     objsp.setVec3("light.ambient", lambient);
     objsp.setVec3("light.diffuse", ldiffuse);
     objsp.setVec3("light.specular", lspecular);
     objsp.setVec3("light.position", lposition);
 
-    objsp.setVec3("material.ambient", mambient);
-    objsp.setVec3("material.diffuse", mdiffuse);
-    objsp.setVec3("material.specular", mspecular);
+    // objsp.setVec3("material.ambient", mambient);
+    objsp.setInt("material.diffuse", 0);
+    // objsp.setVec3("material.specular", mspecular);
+    objsp.setInt("material.specular", 1);
     objsp.setFloat("material.shininess", mshininess);
 
     Shader litsp(SRC_VSHADER_LIT, SRC_FSHADER_LIT);
@@ -144,7 +160,10 @@ int main(int argc, char** argv) {
         lframe = cframe;
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures);
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
 
         glm::mat4 mview = mcam.GetViewMatrix();
         glm::mat4 mproj = glm::perspective(glm::radians(mcam.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
