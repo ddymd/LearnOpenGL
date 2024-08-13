@@ -9,9 +9,10 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-#include "camera.h"
-#include "shader.h"
+#include "camera.hpp"
+#include "shader.hpp"
 #include "config.h"
 
 #define SRC_VSHADER_OBJ TOP_SRC_DIR"Lighting/Materials/Exercises/obj_shader2.vs"

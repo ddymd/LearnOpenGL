@@ -2,10 +2,11 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "config.h"
-#include "camera.h"
-#include "shader.h"
+#include "camera.hpp"
+#include "shader.hpp"
 
 #define SRC_VSHADER_OBJ TOP_SRC_DIR"Lighting/Materials/obj_shader.vs"
 #define SRC_FSHADER_OBJ TOP_SRC_DIR"Lighting/Materials/obj_shader.fs"

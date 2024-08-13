@@ -4,7 +4,7 @@ if(POLICY CMP0074)
     cmake_policy(SET CMP0074 NEW)
 endif()
 
-project(LearnOpenGL VERSION 0.0.1)
+project(LearnOpenGL VERSION 0.0.1 LANGUAGES C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -40,21 +40,27 @@ set(3RD_SRC
 
 set(SHADER_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Shaders/shader.hpp
 )
 
 set(CAMERA_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Camera/camera.hpp
 )
 
-add_library(commonlib ${3RD_SRC} ${SHADER_SRC} ${CAMERA_SRC})
+set(COMMON_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/common.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/common.hpp
+)
+
+add_library(commonlib ${3RD_SRC} ${SHADER_SRC} ${CAMERA_SRC} ${COMMON_SRC})
 target_include_directories(commonlib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Shaders>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Camera>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
-target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm)
+target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm Threads::Threads ${OPENGL_LIBRARIES})
 
 # add_subdirectory(HelloTriangle)
 # add_subdirectory(Shaders)

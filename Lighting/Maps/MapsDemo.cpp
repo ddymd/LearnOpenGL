@@ -2,11 +2,12 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "camera.h"
-#include "shader.h"
+#include "camera.hpp"
+#include "shader.hpp"
 #include "config.h"
 
 #define SRC_VSHADER_OBJ TOP_SRC_DIR"Lighting/Maps/obj_shader.vs"
@@ -23,8 +24,8 @@ glm::vec3 mdiffuse = materials[idx].diffuse; // (1.0f, 0.5f, 0.31f);
 glm::vec3 mspecular(0.5f, 0.5f, 0.5f);
 float mshininess = 64.f;
 
-glm::vec3 lambient(0.2f, 0.2f, 0.2f);
-glm::vec3 ldiffuse(0.5, 0.5f, 0.5f);
+glm::vec3 lambient(0.3f, 0.3f, 0.3f);
+glm::vec3 ldiffuse(0.5f, 0.5f, 0.5f);
 glm::vec3 lspecular(1.f, 1.f, 1.f);
 glm::vec3 lposition(1.2f, 1.f, 2.f);
 
