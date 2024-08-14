@@ -13,4 +13,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_executable(${PROJECT_NAME}Directional "${CMAKE_CURRENT_SOURCE_DIR}/CastersDirectional.cpp")
 target_link_libraries(${PROJECT_NAME}Directional Threads::Threads ${OPENGL_LIBRARIES} commonlib)
 
+add_executable(${PROJECT_NAME}Spotlight "${CMAKE_CURRENT_SOURCE_DIR}/CastersSpotlight.cpp")
+target_link_libraries(${PROJECT_NAME}Spotlight Threads::Threads ${OPENGL_LIBRARIES} commonlib)
+
 # add_subdirectory(Exercises)
