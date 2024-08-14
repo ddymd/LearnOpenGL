@@ -63,6 +63,12 @@ int main(int argc, char** argv) {
     unsigned int diffusetex = LoadTexture(TEXTURE_C0);
     unsigned int speculartex = LoadTexture(TEXTURE_CSC);
 
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffusetex);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, speculartex);
+
     // =====> vertex
     unsigned int VAO[2], VBO;
     glGenVertexArrays(2, VAO);
@@ -108,12 +114,6 @@ int main(int argc, char** argv) {
         float cframe = glfwGetTime();
         ProcessInputs(window, cframe-lframe);
         lframe = cframe;
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffusetex);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, speculartex);
 
         glm::mat4 mview = mcam.GetViewMatrix();
         glm::mat mproj = glm::perspective(glm::radians(mcam.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);

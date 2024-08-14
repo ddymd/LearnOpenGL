@@ -32,11 +32,11 @@ void main() {
     // diffuse
     vec3 norm = normalize(fNor);
     vec3 litdir = normalize(light.position-fPos);
-    vec3 diffuse = max(dot(litdir, norm), 0.0) * diffusetex;
+    vec3 diffuse = light.diffuse * max(dot(litdir, norm), 0.0) * diffusetex;
     // specular
     vec3 camdir = normalize(camPos-fPos);
     vec3 refdir = reflect(-litdir, norm);
-    vec3 specular = pow(max(dot(camdir, refdir), 0.0), material.shininess) * speculartex;
+    vec3 specular = light.specular * pow(max(dot(camdir, refdir), 0.0), material.shininess) * speculartex;
     FragColor = vec4(ambient+diffuse+specular, 1.0);
 }
 

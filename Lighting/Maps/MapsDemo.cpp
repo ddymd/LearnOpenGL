@@ -160,12 +160,6 @@ int main(int argc, char** argv) {
         ProcessInputs(window, cframe-lframe);
         lframe = cframe;
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
-
         glm::mat4 mview = mcam.GetViewMatrix();
         glm::mat4 mproj = glm::perspective(glm::radians(mcam.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.f);
 
