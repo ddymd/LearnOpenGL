@@ -98,6 +98,7 @@ int main(int argc, char const *argv[])
         sp.setVec3("light.position", mcam.Position);
         sp.setVec3("light.direction", mcam.Front);
         sp.setFloat("light.cutoff", glm::cos(glm::radians(12.5f)));
+        sp.setFloat("light.outcutoff", glm::cos(glm::radians(17.5f)));
 
         glBindVertexArray(VAO);
         for (int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); ++i) {
