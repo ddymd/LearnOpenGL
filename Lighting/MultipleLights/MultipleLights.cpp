@@ -18,7 +18,7 @@ Camera mcam(glm::vec3(0.f, 0.f, 3.f));
 
 float mshininess = 32.f;
 
-glm::vec3 lambient(0.2f);
+glm::vec3 lambient(0.1f);
 glm::vec3 ldiffuse(0.5f);
 glm::vec3 lspecular(1.f);
 glm::vec3 ldirection(-0.2f, -1.f, -0.3f);
@@ -82,9 +82,28 @@ int main(int argc, char* argv[]) {
     sp.setInt("material.specular", 1);
     sp.setFloat("material.shininess", mshininess);
     sp.setVec3("litdire.direction", ldirection);
-    sp.setVec3("litdire.ambient", lambient);
-    sp.setVec3("litdire.diffuse", ldiffuse);
-    sp.setVec3("litdire.specular", lspecular);
+    sp.setVec3("litdire.ambient", glm::vec3(0.05f));
+    sp.setVec3("litdire.diffuse", glm::vec3(0.4f));
+    sp.setVec3("litdire.specular", glm::vec3(0.5f));
+
+    for (int i = 0; i < sizeof(pointLightPositions)/sizeof(pointLightPositions[0]); ++i) {
+        sp.setFloat(fmt::format("litpoint[{}].constant", i).c_str(), ldfs[4].kc);
+        sp.setFloat(fmt::format("litpoint[{}].linear", i).c_str(), ldfs[4].kl);
+        sp.setFloat(fmt::format("litpoint[{}].quadratic", i).c_str(), ldfs[4].kq);
+        sp.setVec3(fmt::format("litpoint[{}].position", i).c_str(), pointLightPositions[i]);
+        sp.setVec3(fmt::format("litpoint[{}].ambient", i).c_str(), glm::vec3(0.05f));
+        sp.setVec3(fmt::format("litpoint[{}].diffuse", i).c_str(), glm::vec3(0.8f));
+        sp.setVec3(fmt::format("litpoint[{}].specular", i).c_str(), glm::vec3(1.f));
+    }
+
+    sp.setFloat("litspot.constant", ldfs[4].kc);
+    sp.setFloat("litspot.linear", ldfs[4].kl);
+    sp.setFloat("litspot.quadratic", ldfs[4].kq);
+    sp.setFloat("litspot.innercutoff", glm::cos(glm::radians(12.5f)));
+    sp.setFloat("litspot.outercutoff", glm::cos(glm::radians(15.f)));
+    sp.setVec3("litspot.ambient", glm::vec3(0.f));
+    sp.setVec3("litspot.diffuse", glm::vec3(1.f));
+    sp.setVec3("litspot.specular", glm::vec3(1.f));
 
     Shader lsp(SRC_VSHADER_LIT, SRC_FSHADER_LIT);
     lsp.use();
@@ -104,6 +123,9 @@ int main(int argc, char* argv[]) {
         sp.setMat4("view", view);
         sp.setMat4("proj", proj);
         sp.setVec3("camPos", mcam.Position);
+        sp.setVec3("litspot.position", mcam.Position);
+        sp.setVec3("litspot.direction", mcam.Front);
+
         glBindVertexArray(VAO[0]);
         for (int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); ++i) {
             glm::mat4 model(1.f);
@@ -121,7 +143,7 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < sizeof(pointLightPositions)/sizeof(pointLightPositions[0]); ++i) {
             glm::mat4 model(1.f);
             model = glm::translate(model, pointLightPositions[i]);
-            model = glm::scale(model, glm::vec3(0.3f));
+            model = glm::scale(model, glm::vec3(0.2f));
             lsp.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
