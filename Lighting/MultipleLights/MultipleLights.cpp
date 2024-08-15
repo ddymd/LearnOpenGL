@@ -82,28 +82,41 @@ int main(int argc, char* argv[]) {
     sp.setInt("material.specular", 1);
     sp.setFloat("material.shininess", mshininess);
     sp.setVec3("litdire.direction", ldirection);
-    sp.setVec3("litdire.ambient", glm::vec3(0.05f));
-    sp.setVec3("litdire.diffuse", glm::vec3(0.4f));
-    sp.setVec3("litdire.specular", glm::vec3(0.5f));
+    // sp.setVec3("litdire.ambient", glm::vec3(0.05f));
+    // sp.setVec3("litdire.diffuse", glm::vec3(0.4f));
+    // sp.setVec3("litdire.specular", glm::vec3(0.5f));
+
+    sp.setVec3("litdire.ambient", glm::vec3(0.3f, 0.24f, 0.14f));
+    sp.setVec3("litdire.diffuse", glm::vec3(0.7f, 0.42f, 0.26f));
+    sp.setVec3("litdire.specular", glm::vec3(0.5f, 0.5f, 0.5f));
 
     for (int i = 0; i < sizeof(pointLightPositions)/sizeof(pointLightPositions[0]); ++i) {
         sp.setFloat(fmt::format("litpoint[{}].constant", i).c_str(), ldfs[4].kc);
         sp.setFloat(fmt::format("litpoint[{}].linear", i).c_str(), ldfs[4].kl);
         sp.setFloat(fmt::format("litpoint[{}].quadratic", i).c_str(), ldfs[4].kq);
         sp.setVec3(fmt::format("litpoint[{}].position", i).c_str(), pointLightPositions[i]);
-        sp.setVec3(fmt::format("litpoint[{}].ambient", i).c_str(), glm::vec3(0.05f));
-        sp.setVec3(fmt::format("litpoint[{}].diffuse", i).c_str(), glm::vec3(0.8f));
-        sp.setVec3(fmt::format("litpoint[{}].specular", i).c_str(), glm::vec3(1.f));
+        // sp.setVec3(fmt::format("litpoint[{}].ambient", i).c_str(), glm::vec3(0.05f));
+        // sp.setVec3(fmt::format("litpoint[{}].diffuse", i).c_str(), glm::vec3(0.8f));
+        // sp.setVec3(fmt::format("litpoint[{}].specular", i).c_str(), glm::vec3(1.f));
+
+        sp.setVec3(fmt::format("litpoint[{}].ambient", i).c_str(), pointLightColors[i]*0.1f);
+        sp.setVec3(fmt::format("litpoint[{}].diffuse", i).c_str(), pointLightColors[i]);
+        sp.setVec3(fmt::format("litpoint[{}].specular", i).c_str(), pointLightColors[i]);
     }
 
     sp.setFloat("litspot.constant", ldfs[4].kc);
     sp.setFloat("litspot.linear", ldfs[4].kl);
     sp.setFloat("litspot.quadratic", ldfs[4].kq);
     sp.setFloat("litspot.innercutoff", glm::cos(glm::radians(12.5f)));
-    sp.setFloat("litspot.outercutoff", glm::cos(glm::radians(15.f)));
+    // sp.setFloat("litspot.outercutoff", glm::cos(glm::radians(15.f)));
+    sp.setFloat("litspot.outercutoff", glm::cos(glm::radians(13.f)));
+    // sp.setVec3("litspot.ambient", glm::vec3(0.f));
+    // sp.setVec3("litspot.diffuse", glm::vec3(1.f));
+    // sp.setVec3("litspot.specular", glm::vec3(1.f));
+
     sp.setVec3("litspot.ambient", glm::vec3(0.f));
-    sp.setVec3("litspot.diffuse", glm::vec3(1.f));
-    sp.setVec3("litspot.specular", glm::vec3(1.f));
+    sp.setVec3("litspot.diffuse", glm::vec3(0.8f, 0.8f, 0.0f));
+    sp.setVec3("litspot.specular", glm::vec3(0.8f, 0.8f, 0.0f));
 
     Shader lsp(SRC_VSHADER_LIT, SRC_FSHADER_LIT);
     lsp.use();
@@ -113,7 +126,8 @@ int main(int argc, char* argv[]) {
         float cframe = glfwGetTime();
         ProcessInputs(window, cframe-lframe);
         lframe = cframe;
-        glClearColor(0.1f, 0.1f, 0.1f, 1.f);
+        // glClearColor(0.1f, 0.1f, 0.1f, 1.f);
+        glClearColor(0.75f, 0.52f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 view = mcam.GetViewMatrix();
@@ -145,6 +159,7 @@ int main(int argc, char* argv[]) {
             model = glm::translate(model, pointLightPositions[i]);
             model = glm::scale(model, glm::vec3(0.2f));
             lsp.setMat4("model", model);
+            lsp.setVec3("litColor", pointLightColors[i]);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 

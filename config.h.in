@@ -87,6 +87,13 @@ glm::vec3 pointLightPositions[] = {
     glm::vec3( 0.0f,  0.0f, -3.0f)
 };
 
+glm::vec3 pointLightColors[] = {
+    glm::vec3(1.0f, 0.6f, 0.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f),
+    glm::vec3(1.0f, 1.0, 0.0),
+    glm::vec3(0.2f, 0.2f, 1.0f)
+};
+
 float norvertices[] = {
  // positions           // normals          // texture coords
  -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
@@ -188,6 +195,28 @@ LightDistanceFactors ldfs[] = {
  { 325,     1.0,        0.014,  0.0007 },
  { 600,     1.0,        0.007,  0.0002 },
  { 3250,    1.0,        0.0014, 0.000007 }
+};
+
+struct LightStyle {
+    glm::vec3 directionalColor[3];
+    glm::vec3 spotlightColor[3];
+    float innercutoff;
+    float outercutoff;
+};
+
+LightStyle styleDesert = {
+    {
+        {0.3f, 0.24f, 0.14f},
+        {0.7f, 0.42f, 0.26f},
+        {0.5f, 0.5f, 0.5f}
+    },
+    {
+        {0.0f, 0.0f, 0.0f},
+        {0.8f, 0.8f, 0.0f},
+        {0.8f, 0.8f, 0.0f}
+    },
+    12.5f,
+    13.0f
 };
 
 #endif  // _CONFIG_H_
