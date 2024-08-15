@@ -71,5 +71,6 @@ target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm Threads::Threads 
 
 # add_subdirectory(Lighting/Colors)
 # add_subdirectory(Lighting/Materials)
-add_subdirectory(Lighting/Maps)
+# add_subdirectory(Lighting/Maps)
 add_subdirectory(Lighting/Casters)
+add_subdirectory(Lighting/MultipleLights)
