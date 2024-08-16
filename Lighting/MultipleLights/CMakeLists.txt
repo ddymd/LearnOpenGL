@@ -13,4 +13,4 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_executable(${PROJECT_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/MultipleLights.cpp")
 target_link_libraries(${PROJECT_NAME} Threads::Threads ${OPENGL_LIBRARIES} commonlib)
 
-# add_subdirectory(Exercises)
+add_subdirectory(Exercises)

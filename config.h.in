@@ -198,25 +198,88 @@ LightDistanceFactors ldfs[] = {
 };
 
 struct LightStyle {
-    glm::vec3 directionalColor[3];
-    glm::vec3 spotlightColor[3];
-    float innercutoff;
-    float outercutoff;
+    /// glClearColor
+    float clearColor[4];
+    /// Directional Light Colors: ambient;diffuse;specular
+    glm::vec3 DLColors[3];
+    /// Point Light Colors: point1;point2;point3;point4
+    glm::vec3 PLColors[4];
+    /// Point Light Attenuations: constant;linear;quadratic
+    float PLAttenuations[4][3];
+    /// Spot Light Colors: ambient;diffuse;specular
+    glm::vec3 SLColors[3];
+    /// Spot Light Attenuations: constant;linear;quadratic
+    float SLAttenuations[3];
+    /// Spot Light Intensities: innercutoff;outercutoff
+    float SLIntensities[2];
 };
 
 LightStyle styleDesert = {
-    {
-        {0.3f, 0.24f, 0.14f},
-        {0.7f, 0.42f, 0.26f},
-        {0.5f, 0.5f, 0.5f}
-    },
-    {
-        {0.0f, 0.0f, 0.0f},
-        {0.8f, 0.8f, 0.0f},
-        {0.8f, 0.8f, 0.0f}
-    },
-    12.5f,
-    13.0f
+    /// glClearColor
+    { 0.75f, 0.52f, 0.3f, 1.0f },
+    /// Directional Light Colors: ambient;diffuse;specular
+    { {0.3f, 0.24f, 0.14f}, {0.7f, 0.42f, 0.26f}, {0.5f, 0.5f, 0.5f} },
+    /// Point Light Colors: point1;point2;point3;point4
+    { {1.0f, 0.6f, 0.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 0.0f},{0.2f, 0.2f, 1.0f} },
+    /// Point Light Attenuations: constant;linear;quadratic
+    { {1.0f, 0.09f, 0.032f},{1.0f, 0.09f, 0.032f},{1.0f, 0.09f, 0.032f},{1.0f, 0.09f, 0.032f} },
+    /// Spot Light Colors: ambient;diffuse;specular
+    { {0.0f, 0.0f, 0.0f}, {0.8f, 0.8f, 0.0f}, {0.8f, 0.8f, 0.0f} },
+    /// Spot Light Attenuations: constant;linear;quadratic
+    { 1.0f, 0.09f, 0.032f },
+    /// Spot Light Intensities: innercutoff;outercutoff
+    { 12.5f, 13.0f }
+};
+
+LightStyle styleFactory = {
+    /// glClearColor
+    { 0.1f, 0.1f, 0.1f, 1.0f },
+    /// Directional Light Colors: ambient;diffuse;specular
+    { {0.05f, 0.05f, 0.1f}, {0.2f, 0.2f, 0.7f}, {0.7f, 0.7f, 0.7f} },
+    /// Point Light Colors: point1;point2;point3;point4
+    { {0.2f, 0.2f, 0.6f},{0.3f, 0.3f, 0.7f},{0.0f, 0.0f, 0.3f},{0.4f, 0.4f, 0.4f} },
+    /// Point Light Attenuations: constant;linear;quadratic
+    { {1.0f, 0.09f, 0.032f},{1.0f, 0.09f, 0.032f},{1.0f, 0.09f, 0.032f},{1.0f, 0.09f, 0.032f} },
+    /// Spot Light Colors: ambient;diffuse;specular
+    { {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f} },
+    /// Spot Light Attenuations: constant;linear;quadratic
+    { 1.0f, 0.009f, 0.0032f },
+    /// Spot Light Intensities: innercutoff;outercutoff
+    { 10.0f, 12.5f }
+};
+
+LightStyle styleHorror = {
+    /// glClearColor
+    { 0.0f, 0.0f, 0.0f, 1.0f },
+    /// Directional Light Colors: ambient;diffuse;specular
+    { {0.0f, 0.0f, 0.0f}, {0.05f, 0.05f, 0.05f}, {0.2f, 0.2f, 0.2f} },
+    /// Point Light Colors: point1;point2;point3;point4
+    { {0.1f, 0.1f, 0.1f},{0.1f, 0.1f, 0.1f},{0.1f, 0.1f, 0.1f},{0.3f, 0.1f, 0.1f} },
+    /// Point Light Attenuations: constant;linear;quadratic
+    { {1.0f, 0.14f, 0.07f},{1.0f, 0.14f, 0.07f},{1.0f,0.22f,0.2f},{1.0f, 0.14f, 0.07f} },
+    /// Spot Light Colors: ambient;diffuse;specular
+    { {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f} },
+    /// Spot Light Attenuations: constant;linear;quadratic
+    { 1.0f, 0.09f, 0.032f },
+    /// Spot Light Intensities: innercutoff;outercutoff
+    { 10.0f, 15.f }
+};
+
+LightStyle styleBiochemicalLab = {
+    /// glClearColor
+    { 0.9f, 0.9f, 0.9f, 1.0f },
+    /// Directional Light Colors: ambient;diffuse;specular
+    { {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f} },
+    /// Point Light Colors: point1;point2;point3;point4
+    { {0.4f, 0.7f, 0.1f},{0.4f, 0.7f, 0.1f},{0.4f, 0.7f, 0.1f},{0.4f, 0.7f, 0.1f} },
+    /// Point Light Attenuations: constant;linear;quadratic
+    { {1.0f, 0.07f, 0.071f},{1.0f, 0.07f, 0.071f},{1.0f, 0.07f, 0.071f},{1.0f, 0.07f, 0.071f} },
+    /// Spot Light Colors: ambient;diffuse;specular
+    { {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f} },
+    /// Spot Light Attenuations: constant;linear;quadratic
+    { 1.0f, 0.07f, 0.071f },
+    /// Spot Light Intensities: innercutoff;outercutoff
+    { 7.0f, 10.0f }
 };
 
 #endif  // _CONFIG_H_
