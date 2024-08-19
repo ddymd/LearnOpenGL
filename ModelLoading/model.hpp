@@ -1,0 +1,28 @@
+#ifndef __MODEL_HPP__
+#define __MODEL_HPP__
+
+#include <vector>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include "mesh.hpp"
+
+class Model {
+public:
+    Model(const char* path);
+    void Draw(Shader* shader);
+
+private:
+    void loadModel(const char* path);
+    void processNode(aiNode* node, const aiScene* scene);
+    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+
+private:
+    // model data
+    std::vector<Mesh> meshes;
+    std::string directory;
+};
+
+#endif // __MODEL_HPP__

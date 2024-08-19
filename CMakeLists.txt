@@ -21,6 +21,8 @@ find_package(OpenGL REQUIRED)
 message(STATUS "OPENGL_LIBRARIES:${OPENGL_LIBRARIES}")
 # Threads::Threads
 find_package(Threads REQUIRED)
+# assimp::assimp
+find_package(assimp REQUIRED)
 
 # glfw
 # find_package(glfw3 REQUIRED)
@@ -60,7 +62,7 @@ target_include_directories(commonlib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Camera>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
-target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm Threads::Threads ${OPENGL_LIBRARIES})
+target_link_libraries(commonlib PUBLIC Threads::Threads ${OPENGL_LIBRARIES} spdlog::spdlog glfw glm assimp::assimp)
 
 # add_subdirectory(HelloTriangle)
 # add_subdirectory(Shaders)
@@ -73,4 +75,5 @@ target_link_libraries(commonlib PUBLIC spdlog::spdlog glfw glm Threads::Threads 
 # add_subdirectory(Lighting/Materials)
 # add_subdirectory(Lighting/Maps)
 # add_subdirectory(Lighting/Casters)
-add_subdirectory(Lighting/MultipleLights)
+# add_subdirectory(Lighting/MultipleLights)
+add_subdirectory(ModelLoading)
