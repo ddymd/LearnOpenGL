@@ -5,6 +5,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+// #include <assimp/types.h>
+
 class Shader;
 struct Vertex {
     glm::vec3 Position;
@@ -15,6 +17,7 @@ struct Vertex {
 struct Texture {
     unsigned int id;
     std::string type;
+    // aiString path;
     std::string path;
 };
 

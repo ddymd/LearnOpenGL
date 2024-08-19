@@ -1,4 +1,7 @@
 #include <spdlog/spdlog.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#include <glad/glad.h>
 #include "model.hpp"
 
 Model::Model(const char* path) {
@@ -70,14 +73,56 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName) {
     std::vector<Texture> textures;
-    // for (unsigned int i = 0; i < mat->GetTextureCount(type); ++i) {
-    //     aiString str;
-    //     mat->GetTexture(type, i, &str);
-    //     bool skip = false;
-    //     for (unsigned int j = 0; j < textures_loaded.size();)
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); ++i) {
+        aiString str;
+        mat->GetTexture(type, i, &str);
 
-    //     Texture texture;
-    //     textures.push_back({TextureFromFile(str.C_Str(),directory), typeName, str.C_Str()});
-    // }
+        bool skip = false;
+        for (unsigned int j = 0; j < textures_loaded.size(); ++j) {
+            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
+                textures.push_back(textures_loaded[j]);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip) {
+            Texture texture;
+            texture.id = TextureFromFile(str.C_Str(), directory);
+            texture.type = typeName;
+            texture.path = str.C_Str();
+            textures.push_back(texture);
+            textures_loaded.push_back(texture);
+        }
+    }
     return textures;
+}
+
+unsigned int Model::TextureFromFile(const char *path, const std::string &directory, bool gamma) {
+    std::string filename = fmt::format("{}/{}", directory, path);
+    unsigned int textureid;
+    glGenTextures(1, &textureid);
+    int w, h, c;
+    unsigned char* data = stbi_load(filename.c_str(), &w, &h, &c, 0);
+    if (data) {
+        GLenum format = GL_RGB;
+        switch (c) {
+        case 1: format = GL_RED; break;
+        case 3: format = GL_RGB; break;
+        case 4: format = GL_RGBA; break;
+        default:
+            SPDLOG_WARN("unhandled format: {}", c);
+            break;
+        }
+        glBindTexture(GL_TEXTURE_2D, textureid);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, w, h, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        stbi_image_free(data);
+    } else {
+        SPDLOG_ERROR("Texture failed to load at path: {}", path);
+    }
+    return textureid;
 }
