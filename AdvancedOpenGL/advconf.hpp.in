@@ -1,6 +1,10 @@
 #ifndef __ADVCONFIG_HPP__
 #define __ADVCONFIG_HPP__
 
+#define TOP_SRC_DIR "@TOP_SRC_DIR@"
+#define ADVOGL_SRC_DIR "@ADVOGL_SRC_DIR@"
+#define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
+
 float cubeVertices[] = {
     // positions          // texture Coords
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
