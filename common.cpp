@@ -27,7 +27,8 @@ void GLFWCursorPosCB(GLFWwindow* window, double xpos, double ypos) {
     if (bIsFirstCursor) {
         bIsFirstCursor = false;
     } else {
-        gcam->ProcessMouseMovement(xpos-lxpos, ypos-lypos);
+        gcam->ProcessMouseMovement(xpos-lxpos, lypos-ypos);
+        // gcam->ProcessMouseMovement(xpos-lxpos, ypos-lypos);
     }
     lxpos = xpos;
     lypos = ypos;
