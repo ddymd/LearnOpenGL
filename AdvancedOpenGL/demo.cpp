@@ -43,7 +43,6 @@ int main(int argc, char* argv[]) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, GLFWCursorPosCB);
     glfwSetScrollCallback(window, GLFWScrollCB);
-    glEnable(GL_DEPTH_TEST);
 
     unsigned int VAO[2], VBO[2];
     glGenVertexArrays(2, VAO);
@@ -64,8 +63,27 @@ int main(int argc, char* argv[]) {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    unsigned int texmarble = LoadTexture(TEXTURE_MARBLE);
+    unsigned int texmetal = LoadTexture(TEXTURE_METAL);
+
+    glActiveTexture(GL_TEXTURE0);
+
     Shader sp(SRC_VSHADER, SRC_FSHADER);
     sp.use();
+    sp.setFloat("texture0", 0);
+    sp.setFloat("texture1", 1);
+    sp.setMat4("model", glm::mat4(1.f));
+
+    glEnable(GL_DEPTH_TEST);
+    // glDepthFunc(GL_ALWAYS);
+    // GL_NEVER 0x0200
+    // GL_LESS 0x0201
+    // GL_EQUAL 0x0202
+    // GL_LEQUAL 0x0203
+    // GL_GREATER 0x0204
+    // GL_NOTEQUAL 0x0205
+    // GL_GEQUAL 0x0206
+    // GL_ALWAYS 0x0207
 
     float lframe = 0.f;
     while (!glfwWindowShouldClose(window)) {
@@ -74,6 +92,29 @@ int main(int argc, char* argv[]) {
         lframe = cframe;
         glClearColor(0.1f, 0.1f, 0.1f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        sp.use();
+        glm::mat4 proj = glm::perspective(glm::radians(mcam.Zoom), 8.f/6.f, 0.1f, 100.f);
+        sp.setMat4("view", mcam.GetViewMatrix());
+        sp.setMat4("proj", proj);
+
+        glm::mat4 model(1.f);
+        model = glm::translate(model, glm::vec3(-1.f, 0.f, -1.f));
+        sp.setMat4("model", model);
+        glBindTexture(GL_TEXTURE_2D, texmarble);
+        glBindVertexArray(VAO[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        model = glm::mat4(1.f);
+        model = glm::translate(model, glm::vec3(2.f, 0.f, 0.f));
+        sp.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        model = glm::mat4(1.f);
+        sp.setMat4("model", model);
+        glBindTexture(GL_TEXTURE_2D, texmetal);
+        glBindVertexArray(VAO[1]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -5,6 +5,9 @@
 #define ADVOGL_SRC_DIR "@ADVOGL_SRC_DIR@"
 #define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
 
+#define TEXTURE_MARBLE RESOURCES_DIR"marble.jpg"
+#define TEXTURE_METAL RESOURCES_DIR"metal.png"
+
 float cubeVertices[] = {
     // positions          // texture Coords
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
