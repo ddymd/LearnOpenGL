@@ -79,12 +79,8 @@ unsigned int LoadTexture(char const* path) {
     int w, h, c;
     unsigned char* data = stbi_load(path, &w, &h, &c, 0);
     if (data) {
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         GLenum fmt = GL_RGB;
+        GLint param = GL_REPEAT;
         switch (c) {
         case 1:
             fmt = GL_RED;
@@ -94,11 +90,17 @@ unsigned int LoadTexture(char const* path) {
             break;
         case 4:
             fmt = GL_RGBA;
+            param = GL_CLAMP_TO_EDGE;
             break;
         default:
             SPDLOG_WARN("Unhandled image format(channel={})", c);
             break;
         }
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
