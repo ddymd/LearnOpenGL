@@ -8,12 +8,14 @@
 #include "common.hpp"
 #include "advconf.hpp"
 
-Camera mcam(glm::vec3(0.f, 0.f, 3.f));
 
 #define SRC_VSHADER ADVOGL_SRC_DIR"shader.vs"
 #define SRC_FSHADER1 ADVOGL_SRC_DIR"stencil_shader1.fs"
 #define SRC_FSHADER2 ADVOGL_SRC_DIR"stencil_shader2.fs"
 
+Camera mcam(glm::vec3(0.f, 0.f, 3.f));
+glm::vec3 cubepos1(-1.f, 0.01f, -1.f);
+glm::vec3 cubepos2(2.f, 0.01f, 0.f);
 int main(int argc, char* argv[]) {
     glfwSetErrorCallback(GLFWErrorCB);
     if (!glfwInit()) {
@@ -62,26 +64,28 @@ int main(int argc, char* argv[]) {
     glGenBuffers(2, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(VAO[1]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_STENCIL_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     float lframe = 0.f;
     while (!glfwWindowShouldClose(window)) {
         float cframe = glfwGetTime();
         ProcessInputs(window, cframe-lframe);
         lframe = cframe;
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -93,10 +97,50 @@ int main(int argc, char* argv[]) {
         sp1.setMat4("model", model);
         sp1.setMat4("view", view);
         sp1.setMat4("proj", proj);
-        glBindTexture(GL_TEXTURE_2D, texture0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glStencilMask(0x00);
         // draw plane
         glBindVertexArray(VAO[1]);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // draw cubes
+        glBindTexture(GL_TEXTURE_2D, texture0);
+        glBindVertexArray(VAO[0]);
+
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
+
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubepos1);
+        sp1.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubepos2);
+        sp1.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        // glStencilMask(0x00); // disable writing to the stencil buffer
+        glDisable(GL_DEPTH_TEST);
+        // draw scaled cubes
+        sp2.use();
+        sp2.setMat4("view", view);
+        sp2.setMat4("proj", proj);
+        glBindVertexArray(VAO[0]);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubepos1);
+        model = glm::scale(model, glm::vec3(1.02f, 1.02f, 1.02f));
+        sp2.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubepos2);
+        model = glm::scale(model, glm::vec3(1.02f, 1.02f, 1.02f));
+        sp2.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // glStencilMask(0xFF);
+        // glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
