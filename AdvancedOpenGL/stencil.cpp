@@ -14,8 +14,7 @@
 #define SRC_FSHADER2 ADVOGL_SRC_DIR"stencil_shader2.fs"
 
 Camera mcam(glm::vec3(0.f, 0.f, 3.f));
-glm::vec3 cubepos1(-1.f, 0.01f, -1.f);
-glm::vec3 cubepos2(2.f, 0.01f, 0.f);
+
 int main(int argc, char* argv[]) {
     glfwSetErrorCallback(GLFWErrorCB);
     if (!glfwInit()) {
