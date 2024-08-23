@@ -2,6 +2,7 @@
 #include "camera.hpp"
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
+// #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
 #include <spdlog/spdlog.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -96,6 +97,7 @@ unsigned int LoadTexture(char const* path) {
             SPDLOG_WARN("Unhandled image format(channel={})", c);
             break;
         }
+        SPDLOG_DEBUG("Load texture({}), format: 0x{:x}, param: 0x{:x}", path, fmt, param);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param);

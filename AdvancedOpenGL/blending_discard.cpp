@@ -1,4 +1,5 @@
 #include <spdlog/spdlog.h>
+#include <spdlog/cfg/env.h>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,9 +14,8 @@
 
 Camera mcam(glm::vec3(0.f, 0.f, 3.f));
 
-glm::vec3 vegetation_pos[] = { {-1.5f, 0.0f, -0.48f},{1.5f, 0.0f, 0.51f},{0.0f, 0.0f, 0.7f},{-0.3f, 0.0f, -2.3f},{0.5f, 0.0f, -0.6f} };
-
 int main(int argc, char* argv[]) {
+    // spdlog::cfg::load_env_levels();
     glfwSetErrorCallback(GLFWErrorCB);
     if (!glfwInit()) {
         SPDLOG_CRITICAL("GLFW Init Failed");
@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
     unsigned int texmarble = LoadTexture(TEXTURE_MARBLE);
     unsigned int texmetal = LoadTexture(TEXTURE_METAL);
     unsigned int texgrass = LoadTexture(TEXTURE_GRASS);
+    glActiveTexture(GL_TEXTURE0);
 
     // shaders
     Shader sp(SRC_VSHADER, SRC_FSHADER);
@@ -71,7 +72,7 @@ int main(int argc, char* argv[]) {
     glBindVertexArray(VAO[2]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(5 * 6 * sizeof(float)));
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * 5 * 6 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)((3 + 5 * 6) * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(VAO[1]);
@@ -93,6 +94,38 @@ int main(int argc, char* argv[]) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+        sp.use();
+
+        glm::mat4 model(1.f);
+        glm::mat4 view = mcam.GetViewMatrix();
+        glm::mat4 proj(1.f);
+        proj = glm::perspective(glm::radians(mcam.Zoom), 4.f / 3.f, 0.1f, 100.f);
+
+        glBindTexture(GL_TEXTURE_2D, texmetal);
+        sp.setMat4("view", view);
+        sp.setMat4("proj", proj);
+        glBindVertexArray(VAO[1]);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindTexture(GL_TEXTURE_2D, texmarble);
+        glBindVertexArray(VAO[0]);
+        model = glm::translate(model, cubepos1);
+        sp.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubepos2);
+        sp.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+#if 1
+        glBindTexture(GL_TEXTURE_2D, texgrass);
+        glBindVertexArray(VAO[2]);
+        for (int i = 0; i < sizeof(vegetationPositions) / sizeof(vegetationPositions[0]); ++i) {
+            model = glm::mat4(1.f);
+            model = glm::translate(model, vegetationPositions[i]);
+            sp.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+#endif
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

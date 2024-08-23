@@ -1,6 +1,8 @@
 #ifndef __ADVCONFIG_HPP__
 #define __ADVCONFIG_HPP__
 
+#include <glm/glm.hpp>
+
 #define TOP_SRC_DIR "@TOP_SRC_DIR@"
 #define ADVOGL_SRC_DIR "@ADVOGL_SRC_DIR@"
 #define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
@@ -68,5 +70,13 @@ float planeVertices[] = {
 
 glm::vec3 cubepos1(-1.f, 0.01f, -1.f);
 glm::vec3 cubepos2(2.f, 0.01f, 0.f);
+
+glm::vec3 vegetationPositions[] = {
+    {-1.5f, 0.0f, -0.48f},
+    {1.5f, 0.0f, 0.51f},
+    {0.0f, 0.0f, 0.7f},
+    {-0.3f, 0.0f, -2.3f},
+    {0.5f, 0.0f, -0.6f}
+};
 
 #endif  // __ADVCONFIG_HPP__
