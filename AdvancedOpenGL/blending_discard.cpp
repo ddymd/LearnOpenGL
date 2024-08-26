@@ -1,3 +1,5 @@
+#include <map>
+
 #include <spdlog/spdlog.h>
 #include <spdlog/cfg/env.h>
 #include <glad/glad.h>
@@ -125,9 +127,20 @@ int main(int argc, char* argv[]) {
         // glBindTexture(GL_TEXTURE_2D, texgrass);
         glBindTexture(GL_TEXTURE_2D, texwindow);
         glBindVertexArray(VAO[2]);
-        for (int i = 0; i < sizeof(vegetationPositions) / sizeof(vegetationPositions[0]); ++i) {
+        auto wsize = sizeof(vegetationPositions) / sizeof(vegetationPositions[0]);
+        std::map<float, glm::vec3> sorted;
+        for (int i = 0; i < wsize; ++i) {
+            float distance = glm::length(mcam.Position-vegetationPositions[i]);
+            sorted[distance] = vegetationPositions[i];
+
+            // model = glm::mat4(1.f);
+            // model = glm::translate(model, vegetationPositions[i]);
+            // sp.setMat4("model", model);
+            // glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        for (auto it = sorted.rbegin(); it != sorted.rend(); ++it) {
             model = glm::mat4(1.f);
-            model = glm::translate(model, vegetationPositions[i]);
+            model = glm::translate(model, it->second);
             sp.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
