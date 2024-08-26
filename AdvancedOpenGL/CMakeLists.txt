@@ -18,3 +18,6 @@ target_link_libraries(${PROJECT_NAME}_stencil PUBLIC commonlib)
 
 add_executable(${PROJECT_NAME}_blending_discard ${CMAKE_CURRENT_SOURCE_DIR}/blending_discard.cpp)
 target_link_libraries(${PROJECT_NAME}_blending_discard PUBLIC commonlib)
+
+add_executable(${PROJECT_NAME}_faceculling ${CMAKE_CURRENT_SOURCE_DIR}/faceculling.cpp)
+target_link_libraries(${PROJECT_NAME}_faceculling PUBLIC commonlib)
