@@ -49,6 +49,8 @@ int main(int argc, char* argv[]) {
     unsigned int texmarble = LoadTexture(TEXTURE_MARBLE);
     unsigned int texmetal = LoadTexture(TEXTURE_METAL);
     unsigned int texgrass = LoadTexture(TEXTURE_GRASS);
+
+    unsigned int texwindow = LoadTexture(TEXTURE_WINDOW);
     glActiveTexture(GL_TEXTURE0);
 
     // shaders
@@ -58,21 +60,15 @@ int main(int argc, char* argv[]) {
     // VAO  0: cube
     //      1: plane
     //      2: grass
-    unsigned int VAO[3], VBO[2];
+    unsigned int VAO[3], VBO[3];
     glGenVertexArrays(3, VAO);
     glBindVertexArray(VAO[0]);
-    glGenBuffers(2, VBO);
+    glGenBuffers(3, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(VAO[2]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(5 * 6 * sizeof(float)));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)((3 + 5 * 6) * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(VAO[1]);
@@ -83,8 +79,18 @@ int main(int argc, char* argv[]) {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    glBindVertexArray(VAO[2]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     float lframe = 0.f;
     while (!glfwWindowShouldClose(window)) {
@@ -116,8 +122,8 @@ int main(int argc, char* argv[]) {
         model = glm::translate(model, cubepos2);
         sp.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-#if 1
-        glBindTexture(GL_TEXTURE_2D, texgrass);
+        // glBindTexture(GL_TEXTURE_2D, texgrass);
+        glBindTexture(GL_TEXTURE_2D, texwindow);
         glBindVertexArray(VAO[2]);
         for (int i = 0; i < sizeof(vegetationPositions) / sizeof(vegetationPositions[0]); ++i) {
             model = glm::mat4(1.f);
@@ -125,7 +131,6 @@ int main(int argc, char* argv[]) {
             sp.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
-#endif
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

@@ -76,7 +76,7 @@ void SetCamera(Camera* pcam) {
 unsigned int LoadTexture(char const* path) {
     unsigned int texture;
     glGenTextures(1, &texture);
-    stbi_set_flip_vertically_on_load(true);
+    // stbi_set_flip_vertically_on_load(true);
     int w, h, c;
     unsigned char* data = stbi_load(path, &w, &h, &c, 0);
     if (data) {
