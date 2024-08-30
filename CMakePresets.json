@@ -1,0 +1,39 @@
+{
+    "version": 9,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "include": [],
+
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        }
+    ],
+
+    "buildPresets": [
+        {"name": "default", "configurePreset": "default", "jobs": 8}
+    ],
+
+    "testPresets": [],
+
+    "packagePresets": [],
+
+    "workflowPresets": [
+        {
+            "name": "default",
+            "steps": [
+                {"type": "configure", "name": "default"},
+                {"type": "build", "name": "default"}
+            ]
+        }
+    ],
+    "vendor": {}
+}

@@ -7,6 +7,7 @@
 #define ADVOGL_SRC_DIR "@ADVOGL_SRC_DIR@"
 #define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
 
+#define TEXTURE_CONTAINER RESOURCES_DIR"container.jpg"
 #define TEXTURE_MARBLE RESOURCES_DIR"marble.jpg"
 #define TEXTURE_METAL RESOURCES_DIR"metal.png"
 #define TEXTURE_GRASS RESOURCES_DIR"grass.png"
