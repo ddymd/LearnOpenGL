@@ -5,12 +5,15 @@
 
 #include "camera.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
+#include "glm/ext/matrix_transform.hpp"
 #include "shader.hpp"
 #include "common.hpp"
 #include "advconf.hpp"
 
 #define SRC_VSHADER ADVOGL_SRC_DIR"shader.vs"
 #define SRC_FSHADER ADVOGL_SRC_DIR"shader.fs"
+#define SRC_VSHADER_SCREEN ADVOGL_SRC_DIR"screenshader.vs"
+#define SRC_FSHADER_SCREEN ADVOGL_SRC_DIR"screenshader.fs"
 
 float quadVertices[] = {
  // positions // texCoords
@@ -81,27 +84,50 @@ int main(int argc, char* argv[]) {
 
     // load texture
     unsigned int texcontainer = LoadTexture(TEXTURE_CONTAINER);
+    unsigned int texmetal = LoadTexture(TEXTURE_METAL);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texcontainer);
 
-    unsigned int VAO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    unsigned int qVAO, qVBO;
+    glGenVertexArrays(1, &qVAO);
+    glBindVertexArray(qVAO);
+    glGenBuffers(1, &qVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, qVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2*sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    Shader screensp(SRC_VSHADER_SCREEN, SRC_FSHADER_SCREEN);
+    screensp.use();
+    screensp.setFloat("uTexture", 0);
+
     // program shader
     Shader sp(SRC_VSHADER, SRC_FSHADER);
     sp.use();
-    sp.setFloat("texture0", 0);
+    sp.setFloat("uTexture", 0);
     sp.setMat4("model", glm::mat4(1.f));
 
-    // glEnable(GL_DEPTH_TEST | GL_STENCIL_TEST);
+    // === plane and cubes
+    unsigned int VAO[2], VBO[2];
+    glGenVertexArrays(2, VAO);
+    glBindVertexArray(VAO[0]);
+    glGenBuffers(2, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(VAO[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glEnable(GL_DEPTH_TEST | GL_STENCIL_TEST);
 
     float lframe = 0.f;
     while (!glfwWindowShouldClose(window)) {
@@ -110,32 +136,51 @@ int main(int argc, char* argv[]) {
         lframe = cframe;
 
         glm::mat4 view = mcam.GetViewMatrix();
-        glm::mat4 proj = glm::perspective(glm::radians(mcam.Zoom), 4.f / 3.f, .1f, 100.f);
+        glm::mat4 proj = glm::perspective(glm::radians(mcam.Zoom), 4.f / 3.f, 0.1f, 100.f);
 
         // first pass
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glClearColor(0.1f, 0.1f, 0.1f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
-        // drawscene();
-
-        // second pass
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClearColor(1.f, 1.f, 1.f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         sp.use();
         sp.setMat4("view", view);
         sp.setMat4("proj", proj);
+        sp.setMat4("model", glm::mat4(1.f));
 
-        glBindVertexArray(VAO);
+        glBindVertexArray(VAO[1]);
+        glBindTexture(GL_TEXTURE_2D, texmetal);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindVertexArray(VAO[0]);
+        // glDisable(GL_DEPTH_TEST);
+        // glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+        glBindTexture(GL_TEXTURE_2D, texcontainer);
+        glm::mat4 model(1.f);
+        model = glm::translate(model, cubepos1);
+        sp.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.f);
+        model = glm::translate(model, cubepos2);
+        sp.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // second pass
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDisable(GL_DEPTH_TEST);
+        glClearColor(1.f, 1.f, 1.f, 1.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        screensp.use();
+        glBindVertexArray(qVAO);
         glBindTexture(GL_TEXTURE_2D, texColorBuffer);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    glDeleteRenderbuffers(1, &rbo);
+    glDeleteFramebuffers(1, &fbo);
 
     glfwDestroyWindow(window);
     glfwTerminate();
