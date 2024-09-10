@@ -1,0 +1,188 @@
+#ifndef __ADVCONFIG_HPP__
+#define __ADVCONFIG_HPP__
+
+#include <glm/glm.hpp>
+
+#define TOP_SRC_DIR "@TOP_SRC_DIR@"
+#define ADVOGL_SRC_DIR "@ADVOGL_SRC_DIR@"
+#define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
+
+#define TEXTURE_CONTAINER RESOURCES_DIR"container.jpg"
+#define TEXTURE_MARBLE RESOURCES_DIR"marble.jpg"
+#define TEXTURE_METAL RESOURCES_DIR"metal.png"
+#define TEXTURE_GRASS RESOURCES_DIR"grass.png"
+#define TEXTURE_WINDOW RESOURCES_DIR"window.png"
+
+float cubeVertices[] = {
+    // positions          // texture Coords
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+float planeVertices[] = {
+    // positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
+     5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+    -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
+    -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+
+     5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+    -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+     5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+};
+
+glm::vec3 cubepos1(-1.f, 0.01f, -1.f);
+glm::vec3 cubepos2(2.f, 0.01f, 0.f);
+
+glm::vec3 vegetationPositions[] = {
+    {-1.5f, 0.0f, -0.48f},
+    {1.5f, 0.0f, 0.51f},
+    {0.0f, 0.0f, 0.7f},
+    {-0.3f, 0.0f, -2.3f},
+    {0.5f, 0.0f, -0.6f}
+};
+
+float transparentVertices[] = {
+    // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+    0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+    0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+    1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+    0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+    1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+    1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+};
+
+// CCW
+float vertices[] = {
+ // back face
+ -0.5f,-0.5f,-0.5f, 0.0f, 0.0f, // bottom-left
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+  0.5f,-0.5f,-0.5f, 1.0f, 0.0f, // bottom-right
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+ -0.5f,-0.5f,-0.5f, 0.0f, 0.0f, // bottom-left
+ -0.5f, 0.5f,-0.5f, 0.0f, 1.0f, // top-left
+ // front face
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+  0.5f,-0.5f, 0.5f, 1.0f, 0.0f, // bottom-right
+  0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // top-right
+  0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // top-right
+ -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, // top-left
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+ // left face
+ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-right
+ -0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-left
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-left
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-left
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-right
+ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-right
+ // right face
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-left
+  0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-right
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+  0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-right
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-left
+  0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+ // bottom face
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // top-right
+  0.5f,-0.5f,-0.5f, 1.0f, 1.0f, // top-left
+  0.5f,-0.5f, 0.5f, 1.0f, 0.0f, // bottom-left
+  0.5f,-0.5f, 0.5f, 1.0f, 0.0f, // bottom-left
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-right
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // top-right
+ // top face
+ -0.5f, 0.5f,-0.5f, 0.0f, 1.0f, // top-left
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // bottom-right
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // bottom-right
+ -0.5f, 0.5f,-0.5f, 0.0f, 1.0f, // top-left
+ -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+};
+
+// CW
+float vertices_cw[] = {
+ // back face
+ -0.5f,-0.5f,-0.5f, 0.0f, 0.0f, // bottom-left
+  0.5f,-0.5f,-0.5f, 1.0f, 0.0f, // bottom-right
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+ -0.5f,-0.5f,-0.5f, 0.0f, 0.0f, // bottom-left
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+ -0.5f, 0.5f,-0.5f, 0.0f, 1.0f, // top-left
+ // front face
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+  0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // top-right
+  0.5f,-0.5f, 0.5f, 1.0f, 0.0f, // bottom-right
+  0.5f, 0.5f, 0.5f, 1.0f, 1.0f, // top-right
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+ -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, // top-left
+ // left face
+ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-right
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-left
+ -0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-left
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-left
+ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-right
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-right
+ // right face
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-left
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+  0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-right
+  0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // bottom-right
+  0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // top-left
+ // bottom face
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // top-right
+  0.5f,-0.5f, 0.5f, 1.0f, 0.0f, // bottom-left
+  0.5f,-0.5f,-0.5f, 1.0f, 1.0f, // top-left
+  0.5f,-0.5f, 0.5f, 1.0f, 0.0f, // bottom-left
+ -0.5f,-0.5f,-0.5f, 0.0f, 1.0f, // top-right
+ -0.5f,-0.5f, 0.5f, 0.0f, 0.0f, // bottom-right
+ // top face
+ -0.5f, 0.5f,-0.5f, 0.0f, 1.0f, // top-left
+  0.5f, 0.5f,-0.5f, 1.0f, 1.0f, // top-right
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // bottom-right
+  0.5f, 0.5f, 0.5f, 1.0f, 0.0f, // bottom-right
+ -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, // bottom-left
+ -0.5f, 0.5f,-0.5f, 0.0f, 1.0f, // top-left
+};
+
+
+
+#endif  // __ADVCONFIG_HPP__
