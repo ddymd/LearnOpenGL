@@ -1,0 +1,8 @@
+#ifndef __CUBEMAPSCONF_HPP__
+#define __CUBEMAPSCONF_HPP__
+
+#define TOP_SRC_DIR "@TOP_SRC_DIR@"
+#define CUBEMAPS_SRC_DIR "@CUBEMAPS_SRC_DIR@"
+#define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
+
+#endif  // __CUBEMAPSCONF_HPP__
