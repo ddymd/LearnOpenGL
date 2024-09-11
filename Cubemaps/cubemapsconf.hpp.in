@@ -5,4 +5,151 @@
 #define CUBEMAPS_SRC_DIR "@CUBEMAPS_SRC_DIR@"
 #define RESOURCES_DIR "@TOP_SRC_DIR@resources/"
 
+#define TEXTURE_CONTAINER RESOURCES_DIR"container.jpg"
+
+const char* texskybox[] = {
+    RESOURCES_DIR"skybox/right.jpg",
+    RESOURCES_DIR"skybox/left.jpg",
+    RESOURCES_DIR"skybox/top.jpg",
+    RESOURCES_DIR"skybox/bottom.jpg",
+    RESOURCES_DIR"skybox/front.jpg",
+    RESOURCES_DIR"skybox/back.jpg",
+};
+
+// CCW
+float vertices[] = {
+ // right face
+  1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // top-left
+  1.0f,-1.0f,-1.0f, 0.0f, 1.0f, // bottom-right
+  1.0f, 1.0f,-1.0f, 1.0f, 1.0f, // top-right
+  1.0f,-1.0f,-1.0f, 0.0f, 1.0f, // bottom-right
+  1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // top-left
+  1.0f,-1.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+ // left face
+ -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // top-right
+ -1.0f, 1.0f,-1.0f, 1.0f, 1.0f, // top-left
+ -1.0f,-1.0f,-1.0f, 0.0f, 1.0f, // bottom-left
+ -1.0f,-1.0f,-1.0f, 0.0f, 1.0f, // bottom-left
+ -1.0f,-1.0f, 1.0f, 0.0f, 0.0f, // bottom-right
+ -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // top-right
+ // top face
+ -1.0f, 1.0f,-1.0f, 0.0f, 1.0f, // top-left
+  1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // bottom-right
+  1.0f, 1.0f,-1.0f, 1.0f, 1.0f, // top-right
+  1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // bottom-right
+ -1.0f, 1.0f,-1.0f, 0.0f, 1.0f, // top-left
+ -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+ // bottom face
+ -1.0f,-1.0f,-1.0f, 0.0f, 1.0f, // top-right
+  1.0f,-1.0f,-1.0f, 1.0f, 1.0f, // top-left
+  1.0f,-1.0f, 1.0f, 1.0f, 0.0f, // bottom-left
+  1.0f,-1.0f, 1.0f, 1.0f, 0.0f, // bottom-left
+ -1.0f,-1.0f, 1.0f, 0.0f, 0.0f, // bottom-right
+ -1.0f,-1.0f,-1.0f, 0.0f, 1.0f, // top-right
+ // back face
+ -1.0f,-1.0f,-1.0f, 0.0f, 0.0f, // bottom-left
+  1.0f, 1.0f,-1.0f, 1.0f, 1.0f, // top-right
+  1.0f,-1.0f,-1.0f, 1.0f, 0.0f, // bottom-right
+  1.0f, 1.0f,-1.0f, 1.0f, 1.0f, // top-right
+ -1.0f,-1.0f,-1.0f, 0.0f, 0.0f, // bottom-left
+ -1.0f, 1.0f,-1.0f, 0.0f, 1.0f, // top-left
+ // front face
+ -1.0f,-1.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+  1.0f,-1.0f, 1.0f, 1.0f, 0.0f, // bottom-right
+  1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // top-right
+  1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // top-right
+ -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // top-left
+ -1.0f,-1.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+};
+
+float cubeVertices[] = {
+    // positions          // texture Coords
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+float skyboxVertices[] = {
+    // positions
+    -1.0f,  1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+     1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+     1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+    -1.0f,  1.0f, -1.0f,
+     1.0f,  1.0f, -1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+     1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+     1.0f, -1.0f,  1.0f
+};
+
 #endif  // __CUBEMAPSCONF_HPP__

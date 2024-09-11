@@ -108,5 +108,47 @@ unsigned int LoadTexture(char const* path) {
     } else {
         SPDLOG_WARN("Load Texture({}) Failed", path);
     }
+    glBindTexture(GL_TEXTURE_2D, 0);
     return texture;
+}
+
+unsigned int LoadCubeTexture(char const* pathes[]) {
+    unsigned int texcube;
+    glGenTextures(1, &texcube);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texcube);
+    // stbi_set_flip_vertically_on_load(true);
+    int w, h, c;
+    unsigned char* data;
+    for (int i = 0; i < 6; ++i) {
+        data = stbi_load(pathes[i], &w, &h, &c, 0);
+        if (data) {
+            GLenum fmt = GL_RGB;
+            switch (c) {
+            case 1:
+                fmt = GL_RED;
+                break;
+            case 3:
+                fmt = GL_RGB;
+                break;
+            case 4:
+                fmt = GL_RGBA;
+                break;
+            default:
+                SPDLOG_WARN("Unhandled image format(channel={})", c);
+                break;
+            }
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
+        } else {
+            SPDLOG_WARN("Load Cube Texture({}) Failed", pathes[i]);
+        }
+        stbi_image_free(data);
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    return texcube;
 }

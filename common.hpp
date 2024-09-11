@@ -18,4 +18,6 @@ void SetCamera(Camera* pcam);
 
 unsigned int LoadTexture(char const* path);
 
+unsigned int LoadCubeTexture(char const* pathes[]);
+
 #endif // GL_COMMON_HPP
