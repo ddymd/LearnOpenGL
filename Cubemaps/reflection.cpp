@@ -7,6 +7,8 @@
 #include "shader.hpp"
 #include "cubemapsconf.hpp"
 
+#define SRC_VSHADER CUBEMAPS_SRC_DIR"refshader.vs"
+#define SRC_FSHADER CUBEMAPS_SRC_DIR"refshader.fs"
 #define SRC_VSHADER_SKY CUBEMAPS_SRC_DIR"skyshader1.vs"
 #define SRC_FSHADER_SKY CUBEMAPS_SRC_DIR"skyshader1.fs"
 
@@ -60,14 +62,19 @@ int main(int argc, char** argv) {
     glBindVertexArray(VAO[1]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // textures
-    unsigned texsky = LoadCubeTexture(texskybox);
+    unsigned int texcontainer = LoadTexture(TEXTURE_CONTAINER);
+    unsigned int texsky = LoadCubeTexture(texskybox);
     glActiveTexture(GL_TEXTURE0);
 
     // shader program
+    Shader refsp(SRC_VSHADER, SRC_FSHADER);
+    refsp.use();
+    refsp.setMat4("model", glm::mat4(1.f));
+    refsp.setInt("skybox", 0);
     Shader skysp(SRC_VSHADER_SKY, SRC_FSHADER_SKY);
     skysp.use();
     skysp.setInt("texcube", 0);
@@ -81,9 +88,27 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.f);
 
+        glm::mat4 view = mcam.GetViewMatrix();
+        glm::mat4 proj = glm::perspective(glm::radians(mcam.Zoom), 4.f/3.f, 0.1f, 100.f);
+        refsp.use();
+        refsp.setMat4("view", view);
+        refsp.setMat4("proj", proj);
+        refsp.setVec3("cameraPos", mcam.Position);
+        // glBindTexture(GL_TEXTURE_2D, texcontainer);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texsky);
+        glBindVertexArray(VAO[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        //////////////////////////////////////// skybox /////////////////////////////////////////////
+        glDepthFunc(GL_LEQUAL);
+        skysp.use();
+        skysp.setMat4("view", glm::mat4(glm::mat3(view)));
+        skysp.setMat4("proj", proj);
+
         glBindTexture(GL_TEXTURE_CUBE_MAP, texsky);
         glBindVertexArray(VAO[1]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDepthFunc(GL_LESS);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
