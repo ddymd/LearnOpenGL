@@ -23,6 +23,10 @@ message(STATUS "OPENGL_LIBRARIES:${OPENGL_LIBRARIES}")
 find_package(Threads REQUIRED)
 # assimp::assimp
 find_package(assimp REQUIRED)
+# OpenMP::OpenMP_C OpenMP::OpenMP_CXX
+find_package(OpenMP REQUIRED)
+# message("OpenMP Flags: ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS}")
+# message("OpenMP Libs: ${OpenMP_C_LIBRARIES} ${OpenMP_CXX_LIBRARIES}")
 
 # glfw
 # find_package(glfw3 REQUIRED)
