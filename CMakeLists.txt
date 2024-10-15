@@ -83,4 +83,5 @@ target_link_libraries(commonlib PUBLIC Threads::Threads ${OPENGL_LIBRARIES} spdl
 # add_subdirectory(ModelLoading)
 # add_subdirectory(AdvancedOpenGL)
 # add_subdirectory(AdvancedOpenGL/Framebuffers)
-add_subdirectory(Cubemaps)
+# add_subdirectory(Cubemaps)
+add_subdirectory(AdvGLSL)
